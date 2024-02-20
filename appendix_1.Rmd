@@ -1,0 +1,85 @@
+---
+appendix: "appendix_1.Rmd"
+---
+
+# Inclusion Survey
+
+You will use this form to code articles for the Measurement Invariance Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e., once for sex and once for age), then you would fill out the article once for for each test of measurement invariance within an article.
+
+Note: the survey will end if your article does not have the required components we are looking for in the article. If you think you did something wrong, please ask or simply recode it. 
+
+## Page 1
+
+Enter the article doi as an html link (i.e., https://doi.org/10.1177/107319119400100401): 
+
+## Page 2
+
+Does this article report measurement invariance?
+
+Search the document (control + F) for equal groups, invariance, multigroup. Notes:
+
+- Code yes even if the data is simulated
+- Code yes if item response theory differential item functioning is used
+- Code other for unsure or unclear or list your own reason 
+
+Options: Yes, No, Other
+
+*Survey will end if No is selected*
+
+## Page 3
+
+Does this article use structural equation modeling (confirmatory factor analysis) or item response theory? 
+
+Options: Structural Equation Modeling, Item Response Theory, Neither: List Analysis
+
+*Survey will end if IRT is selected*
+
+## Page 4
+
+Does this article include real data (i.e., no simulation studies)? 
+
+Options: Yes, No, Unclear
+
+*Survey will end if No is selected*
+
+## Page 5
+
+What is the name of the instrument/scale they are testing? Please include the entire name, not the abbreviation. 
+
+What is the citation of the scale they are testing? Copy from the reference section. 
+
+## Page 6
+
+How many groups are compared? 
+
+What sample groups are they comparing in this analysis? List groups the way they are described (i.e., do not correct Male/Female to Men/Women, use the names from the paper). Separate groups with a comma. 
+
+## Page 7
+
+What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step. 
+
+Multiple Option Select: Equal form (configural), equal item loadings (metric), equal item intercepts/means (scalar), equal item thresholds, equal item residuals (strict), equal item residual covariances, equal latent means (population means), equal latent variances, equal latent covariances, equal regressions
+
+## Page 8
+
+What order did they test the steps in? Please drag and drop them into the order found in the paper (often in a table). 
+
+Options are piped in from previous question. 
+
+## Page 9
+
+What metric did they use to assess measurement invariance? (i.e., CFI, RMSEA, other fit measures, you can use abbreviations of fit indices)
+
+What rule did they use for measurement invariance? (i.e., change in CFI < .01, chi-square difference test, etc.). List the rule as what would be considered invariant (i.e., passes the test, groups are considered equal). 
+
+What type of invariance did they claim? Use the step name and their words for the type of invariance. For example, fully invariant to residuals/strict, partially scalar invariant, non-invariant, etc.)
+
+## Page 10
+
+Is the data accessible? Look for supplemental documents, links to files, and pages of correlation/covariance matrices. 
+
+Options: Matrices included, contact author, No, Unclear or Broken Links
+
+## Page 11
+
+If the data is available, researchers will be given instructions on how to download it for the next stage of the project, to be shared with analysts. 
