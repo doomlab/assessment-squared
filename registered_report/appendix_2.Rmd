@@ -4,7 +4,7 @@ appendix: "appendix_2.Rmd"
 
 # Example Data Analysis Code
 
-# Libraries
+## Libraries
 
 ```{r}
 library(lavaan)
@@ -14,13 +14,13 @@ library(rio)
 set.seed(43843)
 ```
 
-# Data
+## Data
 
 ```{r eval = F}
 # import the dataset here 
 ```
 
-# Model Programming 
+## Model Programming 
 
 Program the model in `lavaan` syntax including all correlated errors or other adjustments noted by the original authors. 
 
@@ -31,7 +31,7 @@ HS.model <- ' visual  =~ x1 + x2 + x3
               speed   =~ x7 + x8 + x9 '
 ```
 
-# Use MGCFA function
+## Use MGCFA function
 
 Use the `mgcfa` function to run the proposed model steps. This model should replicate their model excluding any partial invariance steps. If they say they will run "residuals" but then do not because of partial invariance, only include up to the step that was invariant or partially invariant. 
 
@@ -48,7 +48,7 @@ saved_mgcfa <- mgcfa(model = HS.model,
                      meanstructure = TRUE)
 ```
 
-# Review Model Outputs
+## Review Model Outputs
 
 Review model outputs to ensure they do not produce heywood cases or other errors. 
 
@@ -72,7 +72,7 @@ saved_mgcfa$model_overall
 # saved_mgcfa$invariance_models$model.residuals
 ```
 
-# Replication Model Level 
+## Replication Model Level 
 
 Run the `bootstrap_model` function and determine the effect sizes for model level invariance steps. Use the same `group.equal` constraints as above. 
 
@@ -100,7 +100,7 @@ saved_boot_model <- bootstrap_model(
 kable(saved_boot_model)
 ```
 
-# Replication Parameter Level / Partial Invariance
+## Replication Parameter Level / Partial Invariance
 
 If their model was invariant: use the last step as the `partial_step` option. If their model was partially invariant, use the step that was indicated as partially invariant (where they had to relax parameters - if they did this on more than one step, use the last one). 
 

@@ -73,6 +73,7 @@ documentclass     : "apa7"
 output            : papaja::apa6_pdf
 appendix          :
   - "appendix_1.Rmd"
+  - "appendix_2.Rmd"
 bibliography: references.bib
 ---
 
@@ -101,8 +102,9 @@ download_file(file = "rr_manuscript.Rmd",
             gpath = "Assessment of Assessment",
             gfile = "rr_manuscript_trackdown")
 # to google
-update_file(file = "PG_Manuscript_2023.Rmd",
-            gfile = "grade_lean_trackdown"
+update_file(file = "rr_manuscript.Rmd",
+            gpath = "Assessment of Assessment",
+            gfile = "rr_manuscript_trackdown",
             rich_text = TRUE,
             hide_code = TRUE)
 ```
@@ -126,7 +128,7 @@ As shown by @maassen2023, measurement invariance may be a hard standard to meet.
 ## Database Curation
 
 ```{r figure-process, fig.cap="A flow chart of potential exclusions to create the database of measurement invariance."}
-include_graphics("pics/data_curation.png")
+include_graphics("../pics/data_curation.png")
 ```
 
 Using *Assessment*'s online search feature, we will search for **measurement invariance** allowing for either term to be present in the manuscript for inclusion in the first round of papers. As of February 2024, this search returns over 600 articles from 1994 to 2024 publications. The data will then be filtered to only include research articles under the article type filter present on the journal website. These citations will be exported to the Zotero group created for this project found at: <https://www.zotero.org/groups/5407184/measurement_invariance_assessment>. Figure \@ref(fig:figure-process) displays the filtering and coding process to create the measurement invariance database.
@@ -240,3 +242,13 @@ Our study is exploratory to determine the landscape of measurement invariance ef
 
 ::: {#refs custom-style="Bibliography"}
 :::
+
+\newpage
+
+# (APPENDIX) Appendix {.unnumbered}
+
+```{r child = "appendix_1.Rmd"}
+```
+
+```{r child = "appendix_2.Rmd"}
+```
