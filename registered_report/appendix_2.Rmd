@@ -6,7 +6,7 @@ appendix: "appendix_2.Rmd"
 
 ## Libraries
 
-```{r}
+```{r echo = T}
 library(lavaan)
 library(visualizemi)
 library(rio)
@@ -16,7 +16,7 @@ set.seed(43843)
 
 ## Data
 
-```{r eval = F}
+```{r eval = F, echo = T}
 # import the dataset here 
 ```
 
@@ -24,7 +24,7 @@ set.seed(43843)
 
 Program the model in `lavaan` syntax including all correlated errors or other adjustments noted by the original authors. 
 
-```{r}
+```{r echo = T}
 # example model 
 HS.model <- ' visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
@@ -35,7 +35,7 @@ HS.model <- ' visual  =~ x1 + x2 + x3
 
 Use the `mgcfa` function to run the proposed model steps. This model should replicate their model excluding any partial invariance steps. If they say they will run "residuals" but then do not because of partial invariance, only include up to the step that was invariant or partially invariant. 
 
-```{r}
+```{r echo = T}
                     # cfa model
 saved_mgcfa <- mgcfa(model = HS.model,
                      # dataset in data frame 
@@ -52,7 +52,7 @@ saved_mgcfa <- mgcfa(model = HS.model,
 
 Review model outputs to ensure they do not produce heywood cases or other errors. 
 
-```{r}
+```{r echo = T}
 # review the model outputs to ensure they do not produce errors
 saved_mgcfa$model_fit
 
@@ -76,7 +76,7 @@ saved_mgcfa$model_overall
 
 Run the `bootstrap_model` function and determine the effect sizes for model level invariance steps. Use the same `group.equal` constraints as above. 
 
-```{r}
+```{r echo = T}
 saved_boot_model <- bootstrap_model(
   # saved configural model to start at
   saved_configural = saved_mgcfa$model_configural,
@@ -104,7 +104,7 @@ kable(saved_boot_model)
 
 If their model was invariant: use the last step as the `partial_step` option. If their model was partially invariant, use the step that was indicated as partially invariant (where they had to relax parameters - if they did this on more than one step, use the last one). 
 
-```{r eval = F}
+```{r eval = F, echo = T}
 saved_boot_partial <- bootstrap_partial(
   # the model you want to test 
   # use the model before your invariant one

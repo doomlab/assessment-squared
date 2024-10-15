@@ -4,7 +4,7 @@ appendix: "appendix_1.Rmd"
 
 # Inclusion Survey
 
-You will use this form to code articles for the Measurement Invariance Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e., once for sex and once for age), then you would fill out the article once for for each test of measurement invariance within an article.
+You will use this form to code articles for the Measurement Invariance Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e., once for sex and once for age), then you would fill out the form once for for each test of measurement invariance within an article.
 
 Note: the survey will end if your article does not have the required components we are looking for in the article. If you think you did something wrong, please ask or simply recode it. 
 
