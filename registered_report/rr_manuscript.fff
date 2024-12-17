@@ -9,6 +9,6 @@
 \ifnextchar[{\eatarg}{}
 
 \centering
-\includegraphics{rr_manuscript_files/figure-latex/figure-violin-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{rr_manuscript_files/figure-latex/figure-violin-1.pdf}}
 \caption{\label{fig:figure-violin}A visualization of the effect sizes for measurement invariance at the model level.}
 \end{figure*}

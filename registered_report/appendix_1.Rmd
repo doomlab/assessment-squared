@@ -2,84 +2,167 @@
 appendix: "appendix_1.Rmd"
 ---
 
-# Inclusion Survey
+# Appendix A
 
-You will use this form to code articles for the Measurement Invariance Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e., once for sex and once for age), then you would fill out the form once for for each test of measurement invariance within an article.
+## Coding Survey
 
-Note: the survey will end if your article does not have the required components we are looking for in the article. If you think you did something wrong, please ask or simply recode it. 
+Note: this document was created in qualtrics and then downloaded into word format to upload into ChatGPT. We formatted it for ease of reading here. 
 
-## Page 1
+```{r}
+library(knitr)
+library(rio)
+```
 
-Enter the article doi as an html link (i.e., https://doi.org/10.1177/107319119400100401): 
+### Article Coding Form  
 
-## Page 2
+You will use this form to code articles for the Assessment of Assessment Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e. once for sex and once for age), then you would fill out the article once for each test of measurement invariance within an article.
+ 
+Note: the survey will end if your article does not have the required components we are looking for in the article. If you think you did something wrong, please ask or simply recode it.  
+
+### doi_link
+
+ Enter the article doi as an html link (i.e., https://doi.org/10.1177/107319119400100401) 
+
+### invariance_yes 
 
 Does this article report measurement invariance?
-
+ 
 Search the document (control + F) for equal groups, invariance, multigroup. Notes:
-
+ 
 - Code yes even if the data is simulated
-- Code yes if item response theory differential item functioning is used
-- Code other for unsure or unclear or list your own reason 
+- Code yes if item response theory differential item functioning is used - Code other for unsure or unclear or list your own reason  
 
-Options: Yes, No, Other
+  - Yes  (1) 
+  -	No  (2) 
+  - Other  (3) __________________________________________________
 
-*Survey will end if No is selected*
+### cfa_irt 
 
-## Page 3
+Does this article use structural equation modeling (confirmatory factor analysis) or item response theory?  
 
-Does this article use structural equation modeling (confirmatory factor analysis) or item response theory? 
+- Structural Equation Modeling  (1) 
+- Item Response Theory  (2) 
+- Neither: List Analysis  (3) __________________________________________________
 
-Options: Structural Equation Modeling, Item Response Theory, Neither: List Analysis
+### real_data 
 
-*Survey will end if IRT is selected*
+Does this article include real data (i.e., no simulation studies)?  
 
-## Page 4
+- Yes  (1) 
+- No  (2) 
+- Unclear  (3) __________________________________________________
 
-Does this article include real data (i.e., no simulation studies)? 
+### data 
 
-Options: Yes, No, Unclear
+Is the data accessible? Look for supplemental documents, links to files, and pages of correlation/covariance matrices.  
 
-*Survey will end if No is selected*
+- Yes  (1) 
+- Matrices included  (2) 
+- Contact author  (3) 
+- No  (4) 
+- Unclear or broken links  (5) __________________________________________________
 
-## Page 5
+### scale_name 
 
-What is the name of the instrument/scale they are testing? Please include the entire name, not the abbreviation. 
+What is the name of the instrument/scale they are testing? Please include the entire name, not the abbreviation.  
 
-What is the citation of the scale they are testing? Copy from the reference section. 
+### scale_ref 
 
-## Page 6
+What is the citation of the scale they are testing? Copy from the reference section.
 
-How many groups are compared? 
+### group_number 
 
-What sample groups are they comparing in this analysis? List groups the way they are described (i.e., do not correct Male/Female to Men/Women, use the names from the paper). Separate groups with a comma. 
+How many groups are compared?  
 
-## Page 7
+### group_names 
 
-What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step. 
+What sample groups are they comparing in this analysis? List groups the way they are described (i.e., do not correct Male/Female to Men/Women, use the names from the paper). Separate groups with a comma.  
 
-Multiple Option Select: Equal form (configural), equal item loadings (metric), equal item intercepts/means (scalar), equal item thresholds, equal item residuals (strict), equal item residual covariances, equal latent means (population means), equal latent variances, equal latent covariances, equal regressions
+### what_steps 
 
-## Page 8
+What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step.  
 
-What order did they test the steps in? Please drag and drop them into the order found in the paper (often in a table). 
+- Equal form (configural)  (1) 
+- Equal item loadings (metric)  (2) 
+- Equal item intercepts/means (scalar)  (3) 
+- Equal item thresholds  (4) 
+- Equal item residuals (strict)  (5) 
+- Equal item residual covariances  (8) 
+- Equal latent means (population means)  (6) 
+- Equal latent variances  (7) 
+- Equal latent covariances  (9) 
+- Equal regressions  (10) 
 
-Options are piped in from previous question. 
+### step_order
 
-## Page 9
+Carry Forward Selected Choices from "What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step. "
+ 
+What order did they test the steps in? Please drag and drop them into the order found in the paper (often in a table).  
 
-What metric did they use to assess measurement invariance? (i.e., CFI, RMSEA, other fit measures, you can use abbreviations of fit indices)
+- Equal form (configural) (1)
+- Equal item loadings (metric) (2)
+- Equal item intercepts/means (scalar) (3)
+- Equal item thresholds (4)
+- Equal item residuals (strict) (5)
+- Equal item residual covariances (6)
+- Equal latent means (population means) (7)
+- Equal latent variances (8)
+- Equal latent covariances (9)
+- Equal regressions (10)
 
-What rule did they use for measurement invariance? (i.e., change in CFI < .01, chi-square difference test, etc.). List the rule as what would be considered invariant (i.e., passes the test, groups are considered equal). 
+### metric_mi 
 
-What type of invariance did they claim? Use the step name and their words for the type of invariance. For example, fully invariant to residuals/strict, partially scalar invariant, non-invariant, etc.)
+What metric did they use to assess measurement invariance? (i.e., CFI, RMSEA, other fit measures, you can use abbreviations of fit indices) 
 
-## Page 10
+### rule_mi 
 
-Is the data accessible? Look for supplemental documents, links to files, and pages of correlation/covariance matrices. 
+What rule did they use for measurement invariance? (i.e., change in CFI < .01, chi-square difference test, etc.). List the rule as what would be considered invariant (i.e., passes the test, groups are considered equal).  
 
-Options: Matrices included, contact author, No, Unclear or Broken Links
+### invariance_claim 
 
-## Page 11
+What type of invariance did they claim? Use the step name and their words for the type of invariance. For example, fully invariant to residuals/strict, partially scalar invariant, non-invariant, etc.) 
 
-If the data is available, researchers will be given instructions on how to download it for the next stage of the project, to be shared with analysts. 
+## ChatGPT Results
+
+### Prompt 
+
+Given the survey questions in Article_Coding_Assessment.docx, answer the survey questions for the panayiotou paper as one answer per row in a tabular format. (attached survey above + pdf)
+
+### Answer 
+
+Here’s a table summarizing the answers for the survey questions based on the Panayiotou et al. paper:
+
+```{r}
+pDF <- import("../coding_example/Panayiotou_Survey_Answers.csv")
+kable(pDF)
+```
+
+This table consolidates relevant information. If you need deeper details on any specific part, let me know!
+
+### Prompt
+
+Do the same thing for the zager paper attached (attached pdf)
+
+### Answer
+
+Here’s a table summarizing the answers for the survey questions based on the Zager Kocjan et al. paper:
+
+-- table included but see note below --
+
+This table consolidates the key survey answers based on the paper. Let me know if you need additional details or refinements!
+
+### Prompt
+
+In the tabular analysis of the Zager paper, reformat the table so that the number of groups, names of groups, and invariance claimed for groups are broken out into separate rows 
+
+### Answer
+
+Here is the reformatted table for the Zager Kocjan et al. paper:
+
+```{r}
+zDF <- import("../coding_example/Zager_Survey_Answers.csv")
+kable(zDF)
+```
+
+This breakout provides separate rows for each group type (countries, genders, ages, and time points) and their respective invariance details. Let me know if you need further refinements!
+

@@ -38,15 +38,17 @@
 \usepackage{xcolor}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -54,36 +56,60 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
 \usepackage[bidi=basic]{babel}
@@ -94,6 +120,9 @@
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage[english]{selnolig} % disable illegal ligatures
+\fi
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -154,10 +183,11 @@
 \makeatletter
 \xapptocmd\appendix
   {\xapptocmd\section
-    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi: #1}}
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
+\makeatother
 \keywords{keywords\newline\indent Word count: X}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
@@ -181,10 +211,7 @@
   {\normalfont\normalsize\bfseries\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -205,7 +232,6 @@
 \authornote{
 
 Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
-
 Enter author note here.
 
 The authors made the following contributions. First Author: Conceptualization, Writing - Original Draft Preparation, Writing - Review \& Editing; Ernst-August Doelle: Writing - Review \& Editing, Supervision.
@@ -231,33 +257,49 @@ Two or three sentences to provide a \textbf{broader perspective}, readily compre
 \begin{document}
 \maketitle
 
-Psychological research involves the difficult task of assessing non-observable phenomena, such as depression or meaning in life, as a measurement proxy for analyzing hypotheses. Researchers develop surveys or instruments to estimate the underlying construction of interest (DeVellis \& Thorpe, 2022), which is then often validated with latent variable modeling (i.e., structural equation modeling; SEM) or item response theory (IRT, Byrne, 2001). Confirmatory factor analysis (CFA) is the most common choice for examining questionnaire's dimensionality, item-latent variable structure, and the overall model fit. Entire journals, such as \emph{Assessment,} are devoted to the publication of scale development and (re)-assessment across different group populations - a necessary avenue given that development information for many scales is not reported in other journal articles (Barry et al., 2014; Weidman et al., 2017). These manuscripts are crucial to interpretation of studies that use these measures and determining the usefulness of overall measured scores (Flake \& Fried, 2020).
+Psychological research involves the difficult task of assessing non-observable phenomena, such as depression or meaning in life, as a measurement proxy for testing hypotheses. Researchers develop surveys or instruments to estimate underlying constructs of interest (DeVellis \& Thorpe, 2022), with item relationships often validated with latent variable modeling (i.e., structural equation modeling {[}SEM{]}) or item response theory (IRT, Byrne, 2001). Entire journals, such as \emph{Assessment,} are devoted to the publication of scale development and (re)-assessment across populations - a necessary avenue given that development information for many scales is not reported in other journal articles (Barry et al., 2014; Weidman et al., 2017). Scale development manuscripts are crucial to interpretation of studies that use these measures and determining the usefulness of measured scores (Flake \& Fried, 2020).
 
-Generalized measures are designed, in theory, to provide the same assessment for different populations (Meredith, 1993); however, there is growing interest in examining for differential responding across sub-populations based on potentially confounding variables. Measurement invariance (or equivalence) implies that the instrument provides the same latent variable measurement for all populations. Equality in measurement is desirable, as it allows for the same interpretation of latent variable scores across groups, as well as knowing that group differences are not attributable to differences in measurement. Non-invariance implies that individuals in separate populations interpret items differently (Cheung \& Rensvold, 2000; Dong \& Dumas, 2020; Liu et al., 2017; Wicherts et al., 2005), which may affect the overall latent variable score; thus, making it difficult to know if group differences are due to population differences or measurement. Being unaware of non-invariance in measures could lead to incorrect interpretations of group differences (Van De Schoot et al., 2015), and these results could potentially explain the replication or lack-thereof for results across studies (Maassen et al., 2023). Maassen et al. (2023) explores the reporting of measurement invariance tests across \emph{Judgment and Decision Making}, \emph{PLOS ONE}, and \emph{Psychological Science} and found abysmal results: very few papers included measurement invariance tests, none of those reported tests could be reproduced, and very little measurement invariance was found across when new tests could be examined.
+Confirmatory factor analysis (CFA) is a common analysis that examines the relationship between observed variables and latent constructions, helping determine the overall model fit to the data collected (\textbf{kline2015?}). Researchers specify the measurement model that demonstrates the proposed relation between measured items and latent variables and use fit indices such as the Tucker Lewis Index (TLI, \textbf{tucker1973?}), Comparative Fit Index (CFI, \textbf{bentler1990?}), Root Mean Square Error of Approximation (RMSEA, \textbf{steiger1990?}), and standardized root mean residual (SRMR, \textbf{bentler1995?}) to determine model fit. Generalized measures are designed, in theory, to provide the same assessment for different populations, but researchers can extend their investigation of item and latent variable properties by examining scale functioning across groups or subpopulations within the data. Multigroup CFA (MGCFA, Meredith, 1993) examines different components of a CFA model for measurement invariance. Measurement invariance (or equivalence) implies that the instrument provides the same latent variable measurement for all populations. Equivalence in measurement is desirable, as it allows for the same interpretation of latent variable scores across groups, as well as knowing that group differences are not attributable to differences the way the measure operates within groups.
 
-This study demonstrates the need for an investigation of measurement invariance within a journal that specifically targets assessments as the area of publication in \emph{Assessment.} Given differences in cultural, experience, language skills, and more, we may not expect all measurements to show invariance across populations. Partial invariance extends multi-group testing of measurement invariance to show exactly where and how many parameters are non-invariant (Byrne et al., 1989; Meredith, 1993). Understanding these items can lead to further investigation into group differences, new interpretation guidelines, or scale improvement to eliminate those differences. Measurement invariance testing suffers from the same black-and-white judgment criteria found in traditional null hypothesis testing and \emph{p}-values with cutoff criteria and rules of thumb (Marsh et al., 2004; Putnick \& Bornstein, 2016). \(d_{MACS}\) was developed as an effect size for measurement invariance for group differences in observed variables which is affected by both factor loadings and item intercepts (Nye \& Drasgow, 2011). \texttt{visualizemi} is a new \emph{R} package that calculates the ``replication'' rate of the overall model steps in measurement invariance (as compared to randomized data), as well as the effect sizes for individual parameters, separating loadings, intercepts, residuals, and so on.
+Measurement invariance is tested by sequentially examining models with group equality constraints. There are several versions of the procedure, but the terminology and steps from (\textbf{brown2005?}) are commonly found within studies on psychological constructs. First, groups are combined together within a \emph{configural} model to assess for the same factor structure across groups. The factor loadings for each group are then set to be equal for the assessment of \emph{metric} invariance, implying that each group has the same strength of item relation to the latent variable. \emph{Scalar} invariance is this examined by constraining the item intercepts across groups, which implies that each group shows the same item means. Last, \emph{strict} invariance may be tested by constraining the item residuals to be equal across groups, suggesting that each group shows the same variance across items. Each step is compared to the previous step to determine if the equality constraints result in a degradation of fit, often by using \(\Delta\) CFI or \(\Delta\) RMSEA (\textbf{cheung2002?}). Scales that demonstrate measurement invariance allow researchers to use scores to make group comparisons without adjustments for measurement differences (\textbf{millsap2011?}).
 
-As shown by Maassen et al. (2023), measurement invariance may be a hard standard to meet. At the moment, it is difficult to know what effect sizes one may expect to find for measurement invariance and what may be a level of measurement invariance to worry about (i.e., moving away from invariant or not decisions). Researchers may be able to define a smallest effect size of interest in measurement invariance (Anvari \& Lakens, 2021; Lakens et al., 2018). In this registered report, we propose to examine the studies published within \emph{Assessment} that report measurement invariance. We will create a database of studies that report measurement invariance and code these articles for the type of groups tested, steps of measurement invariance performed, and results obtained. This searchable database can be useful for further meta-research on measurement invariance or simple lookup for individuals searching for measurement instruments. Next, we will reproduce measurement invariance tests for publications with data and calculate the effect sizes for model and parameter level invariance. This information will be provided in the database to allow researchers to gauge what they may expect if they use a questionnaire or wish to replicate/extend previous work. We will provide the overall summary of effect sizes within measurement invariance tests and comment on the distributions of effect sizes found within the literature. We will end by providing researchers with suggestions for ways to determine their smallest effect size of interest for pre-registration or practical assessment.
+Non-invariance implies that individuals in separate populations interpret items differently (Cheung \& Rensvold, 2000; Dong \& Dumas, 2020; Liu et al., 2017; Wicherts et al., 2005), which may affect the overall latent variable score. Thus, it can be difficult to know if group differences are due to population differences or measurement. Being unaware of non-invariance in measures could lead to incorrect interpretations of group differences (Van De Schoot et al., 2015), and these results could potentially explain the replication or lack-thereof for results across studies (Maassen et al., 2023). For example, (\textbf{trent2013?}) examined the Revised Child Anxiety and Depression Scale (RCADS, \textbf{chorpita2000?}), an instrument that examines depression and anxiety disorders in children. They determined that the six-factor structure was appropriate for White and Black youth (\emph{configural}) and that the factor loadings were also equal across groups (\emph{metric}). They found that children differed in their item intercepts (\emph{scalar}) for five items across the scale, which suggested that the same latent construct would represent different scale scores on those items. These results often suggest partial invariance, wherein the scale often generalizes minus a few items (\textbf{cheung1999?}).
 
-\hypertarget{proposed-method}{%
-\section{Proposed Method}\label{proposed-method}}
+Partial invariance is critical for valid interpretations because without it, researchers risk conflating true group differences with artifacts of measurement bias. Failure to identify and address non-invariance can lead to inaccurate conclusions about group-level comparisons and potentially undermine the validity of psychological research. Despite its importance, researchers frequently overlook measurement invariance testing, as highlighted by Maassen et al. (2023). Their study examined the reporting of measurement invariance tests across \emph{Judgment and Decision Making}, \emph{PLoS One}, and \emph{Psychological Science} and found that 1) very few papers included measurement invariance tests; 2) none of those reported tests could be reproduced; and 3) very little measurement invariance was found across when new tests could be examined.
 
-\hypertarget{database-curation}{%
-\subsection{Database Curation}\label{database-curation}}
+This study demonstrates the need for an investigation of measurement invariance within a journal that specifically targets assessments as the area of publication, such as \emph{Assessment}. Given differences in cultural, experience, language skills, and more, we may not expect all measurements to show invariance across populations. Partial invariance extends multigroup testing of measurement invariance to show exactly where and how many parameters are non-invariant (Byrne et al., 1989; Meredith, 1993). Understanding these items can lead to further investigation into group differences, new interpretation guidelines, or scale improvement to eliminate identified differences. Measurement invariance testing suffers from the same black-and-white judgment criteria found in traditional null hypothesis testing and \emph{p}-values with cutoff criteria and rules of thumb (Marsh et al., 2004; Putnick \& Bornstein, 2016). \(d_{MACS}\) was developed as an effect size for measurement invariance for group differences in observed variables, which is affected by both factor loadings and item intercepts (Nye \& Drasgow, 2011).
+
+\texttt{visualizemi} is a new \emph{R} package that calculates the replication rate of the overall model steps in measurement invariance (as compared to randomized data), as well as the effect sizes for individual parameters, separating loadings, intercepts, residuals, and so on (Buchanan, 2024). This package can be used to determine the overall model level replication effect sizes, individual parameter replication effect sizes, and effect sizes for non-invariance for each parameter separately (i.e., traditional Cohen's \(d_s\) based on parameter size differences). The replication effect sizes are calculated by creating bootstrapped samples from the data and comparing their model results to the same data with randomized group labels. The implication is that randomizing group labels should not affect the results if groups were truly equal in their measurement. The effect size is calculated as a version of Cohen's \(h\) which is the standardized difference in proportions between the bootstrapped results and randomized results. As the effect size increases, we would expect to find non-invariance between groups in a new sample, as the bootstrapped data shows consistent differences between groups.
+
+At the moment, it is difficult to know what effect sizes one may expect to find for measurement invariance and what may be a level of measurement invariance to worry about (i.e., moving away black and white decision making on invariance). Researchers may be able to define a smallest effect size of interest in measurement invariance given the new publications on effect sizes within this area (Anvari \& Lakens, 2021; Lakens et al., 2018). In this registered report, we propose to examine studies published within \emph{Assessment} that report measurement invariance. We will create a database of studies that report measurement invariance and code these articles for the type of groups tested, steps of measurement invariance performed, and results obtained. This searchable database can be useful for further meta-research on measurement invariance or simple search for individuals searching for measurement instruments. Next, we will reproduce measurement invariance tests for publications with sufficient data and calculate the effect sizes for model and parameter level invariance. This information will be provided in the database to allow researchers to gauge what they may expect if they use a questionnaire or wish to replicate/extend previous work. We will provide the overall summary of effect sizes within measurement invariance tests and comment on the distributions of effect sizes found within the literature. We will end by providing researchers with suggestions for ways to determine their smallest effect size of interest for pre-registration or practical assessment.
+
+\section{Proposed Method}\label{proposed-method}
+
+\subsection{Database Curation}\label{database-curation}
 
 \begin{figure}
 \includegraphics[width=1.69in]{../pics/data_curation} \caption{A flow chart of potential exclusions to create the database of measurement invariance.}\label{fig:figure-process}
 \end{figure}
 
-Using \emph{Assessment}'s online search feature, we will search for \textbf{measurement invariance} allowing for either term to be present in the manuscript for inclusion in the first round of papers. As of February 2024, this search returns over 600 articles from 1994 to 2024 publications. The data will then be filtered to only include research articles under the article type filter present on the journal website. These citations will be exported to the Zotero group created for this project found at: \url{https://www.zotero.org/groups/5407184/measurement_invariance_assessment}. Figure \ref{fig:figure-process} displays the filtering and coding process to create the measurement invariance database.
+Using \emph{Assessment}'s online search feature, we will search for \textbf{measurement invariance} allowing for either term to be present in the manuscript for inclusion in the first round of papers (which would also cover related terms such as \textbf{measurement equivalence}). As of December 2024, this search returns over 600 articles from 1994 (i.e., the journal's establishment date) to 2024 publications. The data will then be filtered to only include research articles under the article type filter present on the journal website. These citations will be exported to the Zotero group created for this project found at: \url{https://www.zotero.org/groups/5407184/measurement_invariance_assessment}. Figure \ref{fig:figure-process} displays the filtering and coding process to create the measurement invariance database. We chose this journal primarily due to journal focus, and the number of available articles indicates a large sample size of articles to investigate measurement invariance.
 
-Each article will then be coded for inclusion in the measurement invariance database and for potential further analysis. The coding scale is included in Appendix A. Coders will be first asked to determine if the article includes measurement invariance, and they will be instructed to include articles that use structural equation modeling or item response theory or leave notes if they are unsure. For articles marked yes or unsure, they will then enter if the article uses structural equation modeling or item response theory, as well as a potential other category. Last, they will indicate if the article includes real data. At this point in the survey, studies that have been marked as not measurement variance, item response theory, or simulation/theoretical articles will be excluded.
+\subsubsection{Screening procedure}\label{screening-procedure}
 
-The next portion of the coding survey includes information about the measurement invariance test(s) in the manuscript. Each measurement test will be coded separately. Coders will include the name and citation of the scale assessed, what groups are compared in the measurement invariance test, and the steps performed in the measurement invariance assessment. Once these steps are selected, coders will order them based on the manuscript, list the type of invariance claimed, and list the fit index used for determination of invariance, along with the rule (i.e., CFI, \(\Delta\)CFI \textgreater{} .01). Finally, they will determine if the data (covariance/correlation matrices or raw data) is avaliable. If so, they will upload it to a private repository for the analysis portion of the study. Coders will be recruited from author networks specifically for individuals with experience in structural equation modeling. They will be given a video example of the coding procedure to watch before beginning the process.
+\textbf{Inclusion}: Each article will be coded for inclusion in the measurement invariance database and for potential further analysis by filling out a coding survey created for this purpose. The coding scale is included in Appendix A. We created the original article inclusion form using students enrolled in a structural equation modeling course, and pilot tested several articles to determine the scope of the project (see results below). We then tested if ChatGPT could respond to the survey questions and answer these questions accurately if given a copy of the research article. ChatGPT 4.0 appears to be able to answer questions accurately, and therefore, we will use the 4.0 model (or higher depending on time of study) to initially code articles. The example prompt and output from ChatGPT for an article with multiple invariance tests is included in Appendix A. The survey includes items to determine if the article includes measurement invariance, how the measurement was analyzed (i.e., structural equation modeling, item response theory, or other), and if the study included participant data (i.e., no simulation studies). Only research articles that used structural equation modeling to examine measurement invariance on participant data will be included in the database.
 
-A pilot test of this coding procedure was completed with the lead author's structural equation modeling course. Each coder was assigned a specific issue of Volume 30 and examined all articles within that issue. Approximately 38.30 percent of articles within those issues included measurement invariance (\emph{n} = 120 unique articles coded). Of those articles, 66.70 \% used structural equation modeling, and of those articles, 89.20 percent used participant data. 45 measurement invariance tests were coded, and approximately 42.20 percent included data for testing.
+Measurement Invariance Variables: The next portion of the coding survey includes information about the measurement invariance test(s) in the manuscript. Each measurement test will be coded separately. ChatGPT will include the name and citation of the scale assessed, what groups are compared in the measurement invariance test, and the steps performed in the measurement invariance assessment. Once these steps are selected, ChatGPT will order them based on the manuscript, list the type of invariance claimed, and list the fit index used for determination of invariance, along with the rule (i.e., CFI, \(\Delta\)CFI \textgreater{} .01, RMSEA, \(\Delta\)RMSEA \textgreater{} .015 (\textbf{cheung2002?})). If the data appears to be included, links for the repository will be extracted.
 
-If the search results online return articles that are more closely aligned with measurement invariance (rather than examining all articles as we did in the pilot study), we might expect that a smaller proportion will be excluded for only discussing measurement invariance. If the other percentages are approximate, then we might expect that 400 articles would use structural equation modeling, 357 would include participant data, and 151 may have avaliable data for examination. Given the recent trends in transparency and openness, this number is likely an overestimate as the pilot included only new articles.
+\subsubsection{Coders}\label{coders}
+
+Coders will be recruited from author networks targeting researchers with self-identified experience in structural equation modeling. We will randomly select 10\% of the articles processed by ChatGPT to check for accuracy. The coder will be given the responses from ChatGPT. They will note any incorrect answers or potential issues with output. The lead team will analyze these results to determine if consistent issues with particular questions answered by ChatGPT can be found. If these results indicate consistent inappropriate answers (i.e., more than 30\% of the item is flagged completely incorrect), the lead team and coders will recode that item for all papers. For answers that are flagged as 30\% partially incorrect (i.e., half correct, misleading, or otherwise not quite right), we will tweak the ChatGPT prompt until coders agree the issue has been fixed. Each coder will be asked to complete at least ten articles for credit (i.e., the data curation CRediT category, Allen et al., 2014). We will report these coding statistics for the randomly selected articles.
+
+\subsubsection{Pilot Test}\label{pilot-test}
+
+A pilot test of the coding procedure was completed with the lead author's structural equation modeling teaching course{[}\^{}This test was completed before ChatGPT tests but provides information about the number of expected articles and scope of the project{]}. Each coder was assigned a specific issue of Volume 30 of \emph{Assessment}, and they examined all articles within that issue. Approximately 38.30 percent of articles within those issues included measurement invariance (\emph{n} = 120 unique articles coded). Of those articles, 66.70 \% used structural equation modeling, and of those articles, 89.20 percent used participant data. 45 measurement invariance tests were coded, and approximately 42.20 percent included data for testing.
+
+For the proposed project, we might expect that a smaller proportion will be excluded for only discussing measurement invariance, as the coding class project examined all articles within an issue, rather than just examining results returned from the online search. If the other percentages are approximate, then we might expect that 400 articles would use structural equation modeling, 357 would include participant data, and 151 may have available data for examination. Given the recent trends in transparency and openness, this number is likely an overestimate as the pilot included only new articles.
+
+\subsection{Database Analysis}\label{database-analysis}
 
 The final coding of articles and their measurement invariance tests will be presented as a database of measurement invariance results. These results can be re-used in other meta-analytic studies. We will present the following summary statistics:
 
@@ -269,15 +311,17 @@ The final coding of articles and their measurement invariance tests will be pres
   \begin{itemize}
   \tightlist
   \item
+    Total number of articles published to date
+  \item
     Total number of invariance related articles
   \item
     Split of articles into structural equation modeling, item response theory, and other analyses types
   \item
-    Number of articles that include participant data
+    Number of articles that analyzed participant data (versus simulation only studies)
   \end{itemize}
 \end{itemize}
 
-Each of these statistics will be calculated on the unique articles coded.
+We will incorporate this information in Figure \ref{fig:figure-process} similar to a Prisma schema to show the number of articles included in each step of the screening procedure.
 
 \begin{itemize}
 \tightlist
@@ -287,354 +331,450 @@ Each of these statistics will be calculated on the unique articles coded.
   \begin{itemize}
   \tightlist
   \item
-    Commonly reported scales (if any patterns emerge)
+    Commonly reported scales
   \item
     Frequency of number of groups compared
-  \item
-    Commonly occurring group comparisons: we will code this variable into overall category such as age, gender/sex, language, etc.
-  \item
-    Frequency of each type of measurement invariance assessment (i.e., number of equal form, equal item intercepts, etc.)
-  \item
-    Commonly used fit statistics and rules of thumb for invariance testing
-  \item
-    Commonly reported level of invariance
   \item
     Frequency of data inclusion for reproducibility
   \end{itemize}
 \end{itemize}
 
-\hypertarget{data-analysis}{%
-\subsection{Data Analysis}\label{data-analysis}}
+The statistics from this section will be calculated based on the number of papers coded.
 
-Each measurement invariance test that included data will then be coded using the template in Appendix 2. Using the \texttt{visualizemi} package {[}CITE{]}, coders will program a multigroup confirmatory factor analysis using the steps outlined from the research article and the provided data. Each model will first be examined for convergence across the same measurement invariance steps from the published articles. Models that do not converge will be noted, and no more coding will be performed. Given the results from the article, each model will then be tested for replication effect sizes rates at the model and parameter level. For example, an article that claimed measurement invariance for equal form, loadings, and intercepts will be tested with these same steps to determine the effect size of potential replication for each of those steps.
+\begin{verbatim}
+-   Commonly occurring group comparisons: we will code this variable into overall category labels. Variable group labels will be determined based on results from the study, but we expect certain categories such as age, gender/sex, language, country, and race/ethnicity. 
+-   Frequency of each type of measurement invariance assessment (i.e., number of equal form, equal item intercepts, etc.)
+-   Commonly used fit statistics and rules of thumb for invariance testing
+-   Frequency of each type of measurement invariance claimed
+\end{verbatim}
 
-The \texttt{visualizemi} package calculates the effect size of potential replication by bootstrapping the original data with replacement from the study and compares these results to a the same bootstrapped dataset that has had the group labels randomized. The effect size is normalized based on the range of \emph{h} (effect size for two proportions, similar to Cohen's \emph{d}) to create a score of -1 to 1. A positive non-measurement invariance effect size means that the bootstrapped data has more non-invariance than the randomized scores. A negative effect size would indicate that the bootstrapped data has less non-invariance than the randomized data. A score of zero indicates that the bootstrapped and randomized data have the same likelihood of (non)-invariance. The logic of desiring a zero or negative effect size is that it implies that the groups are equivalent, and therefore, the randomization does not affect the results because groups perform the same on the questionnaire. Because this effect size is based on proportions, one could flip the sign for the effect size for measurement invariance, but here we focus on the amount of non-invariance.
+The statistics from this section will be calculated based on the total number of measurement invariance tests coded. If a paper includes multiple invariance tests, it will therefore be included multiple times in the overall assessment of measurement invariance claimed (for example).
 
-The potential ``partial'' invariance for each parameter at the final step of the model testing will then be examined. In our example, the intercept level would be examined for parameter level effect sizes, as it was the final step of their invariant model. If an article reported partial invariance, the step with partial invariance will be examined at the parameter level. If they used multiple partial invariance steps, only the final stage will be examined. The same effect size can be calculated for each parameter in the partial invariance test, as well as the difference in group parameter estimates (i.e., \emph{d} for intercept group 1 versus intercept group 2).
+\subsection{Effect Size Calculation}\label{effect-size-calculation}
 
-Each coding will be programmed by one coder and checked by another coder using a small number of bootstrap simulations. After both agree that the coding matches the article data, the model and parameter level simulations will be run over 1000 simulations on a high performance computing server to ensure consistency in versions of \emph{R} and packages. The exact versions will be reported for reproducibility. The results will be exported in both an HTML format and Rdata for further use. These files will be available on our repository at \url{https://github.com/doomlab/assessment-squared}.
+Each measurement invariance test that included data will then be coded using the template in Appendix 2. Using the \texttt{visualizemi} package (Buchanan, 2024), coders will program a multigroup confirmatory factor analysis using the steps outlined from the research article and the provided data. Each model will first be examined for convergence across the same measurement invariance steps from the published articles, only using information present within the article or supplemental material for factor structure and any modifications made to scale structure (i.e., correlated residuals). Models that do not converge will be noted, and no more analysis on that data will be performed. Each model will then be tested for replication effect sizes rates at the model and parameter level. For example, an article that claimed measurement invariance for equal form, loadings, and intercepts will be tested with these same steps to determine the effect size of potential replication for each of those steps.
 
-\hypertarget{model-level-results}{%
-\subsubsection{Model Level Results}\label{model-level-results}}
+The \texttt{visualizemi} package calculates the effect size of potential replication by bootstrapping the original data with replacement and compares these results to the same bootstrapped dataset that has had the group labels randomized. Table \ref{tab:table-1-example} shows the results of model level bootstrapping using the Holzinger-Swineford data embedded in the \emph{lavaan} package {[}CITE{]}. The factor loadings (\emph{metric} invariance) were non-invariant when compared to a \emph{configural} model 90\% of the time while the randomized data was non-invariant only 10\% of the time. The \(h_{mni}\) effect size represents the standardized difference between these two proportions and the amount of expected non-invariance if the study was replicated with similar data. The range of \(h\) statistics is \(\pi\), so the \(h_{mni_p}\) column represents the \(h_{mni}\) scaled -1 to 1 for easier interpretation. At zero, we would expect to find that the bootstrapped data and randomized data do not show differences (thus, should be invariant), and as the \(h_{mni_p}\) statistic approaches 1, the more likely we are to find non-invariance in new samples.
 
-At the model level, the bootstrapping function returns an effect size \texttt{h\_nmi\_p} which represents the \emph{h} effect size statistic for measurement invariance normalized to a proportion of the possible effect size ranged. We will compile the results based on step across measurement invariance tests, and we will report the following (simulated data below):
+If a model showed any partial invariance, we will then use the partial bootstrapping function in \texttt{visualizemi} to calculate the effect size of replicating partial invariance and the difference between parameter estimates. Given the HolzingerSwineford1939 data shown in Table \ref{tab:table-1-example}, we would examine the results of partial invariance at the loadings step to determine where the potential group differences lie. Each factor loading would be individually relaxed one at a time and the bootstrapping procedure is examined for each loading separately. Table \ref{tab:table-2-example} demonstrates the results of the bootstrapping for the HolzingerSwineford1939 data, including the number of non-invariant results for each individual factor loading. We will report \(h_{mni_p}\) for each parameter, along with \(d_s\) for the group size differences between groups for bootstrapped estimates. The effect size difference between parameter estimates is calculated by using \(d_s\) for independent samples groups. These estimates are calculated on the standardized loadings so they are comparable across different scale examples.
+
+Each measurement invariance comparison found in the database curation (with data) will be programmed by one coder and checked by another coder using a small number of bootstrap simulations. If a disagreement arises during the code checking process, which cannot be resolved by the coders, the lead author will make the final decision. After both coders and the lead author (if applicable) agree that the coding matches the article data, the model and parameter level simulations will be run over 1000 simulations on a high performance computing server to ensure consistency in versions of \emph{R} and packages. The exact versions will be reported for reproducibility. The results will be exported in both an HTML format and Rdata for further use. These files will be available on our repository at \url{https://github.com/doomlab/assessment-squared}.
+
+\subsubsection{Model Level Results}\label{model-level-results}
+
+We will compile the results based on measurement invariance steps (i.e., configural, metric, scalar, etc.), and we will report the following (simulated data below):
 
 \begin{itemize}
 \tightlist
 \item
-  Mean, standard deviation, sample size for each step
+  Mean, standard deviation, sample size for each measurement invariance step
 \item
   25, 50, 75\% quantile values
 \item
   Visualization of the distribution of effects - for example, Figure \ref{fig:figure-violin}
 \end{itemize}
 
+These results are based on the total number of programmed measurement invariance analyses, as not all articles from the database curation are expected to include data.
+
 \begin{figure}
 \centering
-\includegraphics{rr_manuscript_files/figure-latex/figure-violin-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{rr_manuscript_files/figure-latex/figure-violin-1.pdf}}
 \caption{\label{fig:figure-violin}A visualization of the effect sizes for measurement invariance at the model level.}
 \end{figure}
 
-\hypertarget{parameter-level-results}{%
-\subsubsection{Parameter Level Results}\label{parameter-level-results}}
+\subsubsection{Parameter Level Results}\label{parameter-level-results}
 
-For the parameter level results, the bootstrapping function returns similar information for each of the parameters in the final step of the model. For example, if a manuscript suggests that the model was fully invariant at the residuals level, each residual effect would be tested to determine effect sizes of replication and group differences. First, we will extract the \texttt{h\_nmi\_p} effects for each parameter to determine the distribution, statistics, and visualizations for each type of parameter (loadings, residuals, intercepts, etc.). We will present:
+For the parameter level results, the bootstrapping function returns similar information for each of the parameters in the final step of the model as described above. We will present:
 
 \begin{itemize}
 \tightlist
 \item
-  Mean, standard deviation, sample size for each type of parameter
+  Mean, standard deviation, sample size for each type of parameter (loadings, intercepts, residuals, etc.)
 \item
   25, 50, 75\% quantile values
 \item
   Visualization of the distribution of effects
 \end{itemize}
 
-Next, the function additionally returns effect sizes for group differences on each parameter, \(d_s\). This value is calculated as the average mean difference of the parameter estimates for each group divided by their pooled standard error across bootstraps. \(d_s\) is calculated for both the bootstrapped data and the randomized data. We will calculated a ``normalized'' effect size for each parameter by subtracting \(d_s\) for the bootstrapped data minus the \(d_s\) for the randomized data. Because group order is arbitrary in our analysis, we will take the absolute value of the effect size for final reporting. From this dataset, we will report:
+Next, the function additionally returns effect sizes for group differences on each parameter, \(d_s\). This value is calculated as the average mean difference of the parameter estimates for each group divided by their pooled standard error across bootstraps. \(d_s\) is calculated for both the bootstrapped data and the randomized data. We will calculate a ``normalized'' effect size for each parameter by subtracting \(d_s\) for the bootstrapped data minus the \(d_s\) for the randomized data. Because group order is arbitrary in our analysis, we will take the absolute value of the effect size for final reporting. From this dataset, we will report:
 
 \begin{itemize}
 \tightlist
 \item
-  Mean, standard deviation, sample size for each type of parameter
+  Mean, standard deviation, sample size for each type of parameter (loadings, intercepts, residuals, etc.)
 \item
   25, 50, 75\% quantile values
 \item
   Visualization of the distribution of effects
 \end{itemize}
 
-\hypertarget{results-interpretation}{%
-\subsection{Results Interpretation}\label{results-interpretation}}
+\subsection{Results Interpretation}\label{results-interpretation}
 
-Our study is exploratory to determine the landscape of measurement invariance effect size using the premier journal outlet for such publications in clinical psychology. We make no predictions on the direction or size of the results. Instead, we will present the database for future reuse and examine the results for any consistent patterns or findings. By understanding the range of published values\footnote{The advantage of studying measurement invariance in this scenario is that both invariant and non-invariant models are typically publishable. While publication bias likely still exists, it may be less than traditional effect size meta-analysis studies.}, researchers can use these results to gauge their study results against. We will comment on potential ideas for estimating the smallest effect of interest for measurement invariance.
+Our study is exploratory to determine the landscape of measurement invariance effect size using the premier journal outlet in clinical psychology for such publications. We make no predictions on the direction or size of the results. Instead, we will present the database for future reuse and examine the results for any consistent patterns or findings. By understanding the range of published values\footnote{The advantage of studying measurement invariance in this scenario is that both invariant and non-invariant models are typically publishable. While publication bias likely still exists, it may be less than traditional effect size meta-analysis studies.}, researchers can use these results to gauge their study results against. We will comment on potential ideas for estimating the smallest effect of interest for measurement invariance.
 
 \newpage
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
-\hypertarget{refs}{}
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-anvari2021}{}}%
+\bibitem[\citeproctext]{ref-allen2014}
+Allen, L., Scott, J., Brand, A., Hlava, M., \& Altman, M. (2014). Publishing: Credit where credit is due. \emph{Nature}, \emph{508}(7496), 312--313. \url{https://doi.org/10.1038/508312a}
+
+\bibitem[\citeproctext]{ref-anvari2021}
 Anvari, F., \& Lakens, D. (2021). Using anchor-based methods to determine the smallest effect size of interest. \emph{Journal of Experimental Social Psychology}, \emph{96}, 104159. \url{https://doi.org/10.1016/j.jesp.2021.104159}
 
-\leavevmode\vadjust pre{\hypertarget{ref-barry2014}{}}%
+\bibitem[\citeproctext]{ref-barry2014}
 Barry, A. E., Chaney, B., Piazza-Gardner, A. K., \& Chavarria, E. A. (2014). Validity and Reliability Reporting Practices in the Field of Health Education and Behavior: A Review of Seven Journals. \emph{Health Education \& Behavior}, \emph{41}(1), 12--18. \url{https://doi.org/10.1177/1090198113483139}
 
-\leavevmode\vadjust pre{\hypertarget{ref-byrne2001}{}}%
+\bibitem[\citeproctext]{ref-buchanan2024}
+Buchanan, E. M. (2024). Visualizemi: Visualization, Effect Size, and Replication of Measurement Invariance for Registered Reports. \emph{Assessment}, 10731911241280763. \url{https://doi.org/10.1177/10731911241280763}
+
+\bibitem[\citeproctext]{ref-byrne2001}
 Byrne, B. M. (2001). Structural Equation Modeling With AMOS, EQS, and LISREL: Comparative Approaches to Testing for the Factorial Validity of a Measuring Instrument. \emph{International Journal of Testing}, \emph{1}(1), 55--86. \url{https://doi.org/10.1207/S15327574IJT0101_4}
 
-\leavevmode\vadjust pre{\hypertarget{ref-byrne1989}{}}%
+\bibitem[\citeproctext]{ref-byrne1989}
 Byrne, B. M., Shavelson, R. J., \& Muthén, B. (1989). Testing for the equivalence of factor covariance and mean structures: The issue of partial measurement invariance. \emph{Psychological Bulletin}, \emph{105}(3), 456--466. \url{https://doi.org/10.1037/0033-2909.105.3.456}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cheung2000}{}}%
+\bibitem[\citeproctext]{ref-cheung2000}
 Cheung, G. W., \& Rensvold, R. B. (2000). Assessing Extreme and Acquiescence Response Sets in Cross-Cultural Research Using Structural Equations Modeling. \emph{Journal of Cross-Cultural Psychology}, \emph{31}(2), 187--212. \url{https://doi.org/10.1177/0022022100031002003}
 
-\leavevmode\vadjust pre{\hypertarget{ref-devellis2022}{}}%
+\bibitem[\citeproctext]{ref-devellis2022}
 DeVellis, R. F., \& Thorpe, C. T. (2022). \emph{Scale development: Theory and applications} (Fifth edition). SAGE Publications, Inc.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dong2020}{}}%
+\bibitem[\citeproctext]{ref-dong2020}
 Dong, Y., \& Dumas, D. (2020). Are personality measures valid for different populations? A systematic review of measurement invariance across cultures, gender, and age. \emph{Personality and Individual Differences}, \emph{160}, 109956. \url{https://doi.org/10.1016/j.paid.2020.109956}
 
-\leavevmode\vadjust pre{\hypertarget{ref-flake2020}{}}%
+\bibitem[\citeproctext]{ref-flake2020}
 Flake, J. K., \& Fried, E. I. (2020). Measurement schmeasurement: Questionable measurement practices and how to avoid them. \emph{Advances in Methods and Practices in Psychological Science}, \emph{3}(4), 456465. \url{https://doi.org/10.1177/2515245920952393}
 
-\leavevmode\vadjust pre{\hypertarget{ref-lakens2018}{}}%
+\bibitem[\citeproctext]{ref-lakens2018}
 Lakens, D., Scheel, A. M., \& Isager, P. M. (2018). Equivalence Testing for Psychological Research: A Tutorial. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(2), 259--269. \url{https://doi.org/10.1177/2515245918770963}
 
-\leavevmode\vadjust pre{\hypertarget{ref-liu2017}{}}%
+\bibitem[\citeproctext]{ref-liu2017}
 Liu, M., Harbaugh, A. G., Harring, J. R., \& Hancock, G. R. (2017). The effect of extreme response and non-extreme response styles on testing measurement invariance. \emph{Frontiers in Psychology}, \emph{8}, 726. \url{https://doi.org/10.3389/fpsyg.2017.00726}
 
-\leavevmode\vadjust pre{\hypertarget{ref-maassen2023}{}}%
+\bibitem[\citeproctext]{ref-maassen2023}
 Maassen, E., D'Urso, E. D., Van Assen, M. A. L. M., Nuijten, M. B., De Roover, K., \& Wicherts, J. M. (2023). The dire disregard of measurement invariance testing in psychological science. \emph{Psychological Methods}. \url{https://doi.org/10.1037/met0000624}
 
-\leavevmode\vadjust pre{\hypertarget{ref-marsh2004}{}}%
+\bibitem[\citeproctext]{ref-marsh2004}
 Marsh, H. W., Hau, K.-T., \& Wen, Z. (2004). In search of golden rules: Comment on hypothesis-testing approaches to setting cutoff values for fit indexes and dangers in overgeneralizing hu and bentler's (1999) findings. \emph{Structural Equation Modeling: A Multidisciplinary Journal}, \emph{11}(3), 320--341. \url{https://doi.org/10.1207/s15328007sem1103_2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-meredith1993}{}}%
+\bibitem[\citeproctext]{ref-meredith1993}
 Meredith, W. (1993). Measurement invariance, factor analysis and factorial invariance. \emph{Psychometrika}, \emph{58}(4), 525--543. \url{https://doi.org/10.1007/BF02294825}
 
-\leavevmode\vadjust pre{\hypertarget{ref-nye2011}{}}%
+\bibitem[\citeproctext]{ref-nye2011}
 Nye, C. D., \& Drasgow, F. (2011). Effect size indices for analyses of measurement equivalence: Understanding the practical importance of differences between groups. \emph{Journal of Applied Psychology}, \emph{96}(5), 966--980. \url{https://doi.org/10.1037/a0022955}
 
-\leavevmode\vadjust pre{\hypertarget{ref-putnick2016}{}}%
+\bibitem[\citeproctext]{ref-putnick2016}
 Putnick, D. L., \& Bornstein, M. H. (2016). Measurement invariance conventions and reporting: The state of the art and future directions for psychological research. \emph{Developmental Review}, \emph{41}, 71--90. \url{https://doi.org/10.1016/j.dr.2016.06.004}
 
-\leavevmode\vadjust pre{\hypertarget{ref-vandeschoot2015}{}}%
+\bibitem[\citeproctext]{ref-vandeschoot2015}
 Van De Schoot, R., Schmidt, P., De Beuckelaer, A., Lek, K., \& Zondervan-Zwijnenburg, M. (2015). Editorial: Measurement invariance. \emph{Frontiers in Psychology}, \emph{6}. \url{https://www.frontiersin.org/articles/10.3389/fpsyg.2015.01064}
 
-\leavevmode\vadjust pre{\hypertarget{ref-weidman2017}{}}%
+\bibitem[\citeproctext]{ref-weidman2017}
 Weidman, A. C., Steckler, C. M., \& Tracy, J. L. (2017). The jingle and jangle of emotion assessment: Imprecise measurement, casual scale usage, and conceptual fuzziness in emotion research. \emph{Emotion}, \emph{17}(2), 267--295. \url{https://doi.org/10.1037/emo0000226}
 
-\leavevmode\vadjust pre{\hypertarget{ref-wicherts2005}{}}%
+\bibitem[\citeproctext]{ref-wicherts2005}
 Wicherts, J. M., Dolan, C. V., \& Hessen, D. J. (2005). Stereotype Threat and Group Differences in Test Performance: A Question of Measurement Invariance. \emph{Journal of Personality and Social Psychology}, \emph{89}(5), 696--716. \url{https://doi.org/10.1037/0022-3514.89.5.696}
 
 \end{CSLReferences}
 
 \newpage
 
-\hypertarget{appendix-appendix}{%
-\appendix}
+\appendix
 
 
-\hypertarget{inclusion-survey}{%
-\section{Inclusion Survey}\label{inclusion-survey}}
+\section{Appendix A}\label{appendix-a}
 
-You will use this form to code articles for the Measurement Invariance Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e., once for sex and once for age), then you would fill out the article once for for each test of measurement invariance within an article.
+\subsection{Coding Survey}\label{coding-survey}
+
+Note: this document was created in qualtrics and then downloaded into word format to upload into ChatGPT. We formatted it for ease of reading here.
+
+\subsubsection{Article Coding Form}\label{article-coding-form}
+
+You will use this form to code articles for the Assessment of Assessment Project. You should fill out this form once for each article. If the article has multiple measurement invariance tests (i.e.~once for sex and once for age), then you would fill out the article once for each test of measurement invariance within an article.
 
 Note: the survey will end if your article does not have the required components we are looking for in the article. If you think you did something wrong, please ask or simply recode it.
 
-\hypertarget{page-1}{%
-\subsection{Page 1}\label{page-1}}
+\subsubsection{doi\_link}\label{doi_link}
 
-Enter the article doi as an html link (i.e., \url{https://doi.org/10.1177/107319119400100401}):
+Enter the article doi as an html link (i.e., \url{https://doi.org/10.1177/107319119400100401})
 
-\hypertarget{page-2}{%
-\subsection{Page 2}\label{page-2}}
+\subsubsection{invariance\_yes}\label{invariance_yes}
 
 Does this article report measurement invariance?
 
 Search the document (control + F) for equal groups, invariance, multigroup. Notes:
 
 \begin{itemize}
-\tightlist
 \item
   Code yes even if the data is simulated
 \item
-  Code yes if item response theory differential item functioning is used
-\item
-  Code other for unsure or unclear or list your own reason
+  Code yes if item response theory differential item functioning is used - Code other for unsure or unclear or list your own reason
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Yes (1)
+  \item
+    No (2)
+  \item
+    Other (3) \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  \end{itemize}
 \end{itemize}
 
-Options: Yes, No, Other
-
-\emph{Survey will end if No is selected}
-
-\hypertarget{page-3}{%
-\subsection{Page 3}\label{page-3}}
+\subsubsection{cfa\_irt}\label{cfa_irt}
 
 Does this article use structural equation modeling (confirmatory factor analysis) or item response theory?
 
-Options: Structural Equation Modeling, Item Response Theory, Neither: List Analysis
+\begin{itemize}
+\tightlist
+\item
+  Structural Equation Modeling (1)
+\item
+  Item Response Theory (2)
+\item
+  Neither: List Analysis (3) \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+\end{itemize}
 
-\emph{Survey will end if IRT is selected}
-
-\hypertarget{page-4}{%
-\subsection{Page 4}\label{page-4}}
+\subsubsection{real\_data}\label{real_data}
 
 Does this article include real data (i.e., no simulation studies)?
 
-Options: Yes, No, Unclear
+\begin{itemize}
+\tightlist
+\item
+  Yes (1)
+\item
+  No (2)
+\item
+  Unclear (3) \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+\end{itemize}
 
-\emph{Survey will end if No is selected}
-
-\hypertarget{page-5}{%
-\subsection{Page 5}\label{page-5}}
-
-What is the name of the instrument/scale they are testing? Please include the entire name, not the abbreviation.
-
-What is the citation of the scale they are testing? Copy from the reference section.
-
-\hypertarget{page-6}{%
-\subsection{Page 6}\label{page-6}}
-
-How many groups are compared?
-
-What sample groups are they comparing in this analysis? List groups the way they are described (i.e., do not correct Male/Female to Men/Women, use the names from the paper). Separate groups with a comma.
-
-\hypertarget{page-7}{%
-\subsection{Page 7}\label{page-7}}
-
-What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step.
-
-Multiple Option Select: Equal form (configural), equal item loadings (metric), equal item intercepts/means (scalar), equal item thresholds, equal item residuals (strict), equal item residual covariances, equal latent means (population means), equal latent variances, equal latent covariances, equal regressions
-
-\hypertarget{page-8}{%
-\subsection{Page 8}\label{page-8}}
-
-What order did they test the steps in? Please drag and drop them into the order found in the paper (often in a table).
-
-Options are piped in from previous question.
-
-\hypertarget{page-9}{%
-\subsection{Page 9}\label{page-9}}
-
-What metric did they use to assess measurement invariance? (i.e., CFI, RMSEA, other fit measures, you can use abbreviations of fit indices)
-
-What rule did they use for measurement invariance? (i.e., change in CFI \textless{} .01, chi-square difference test, etc.). List the rule as what would be considered invariant (i.e., passes the test, groups are considered equal).
-
-What type of invariance did they claim? Use the step name and their words for the type of invariance. For example, fully invariant to residuals/strict, partially scalar invariant, non-invariant, etc.)
-
-\hypertarget{page-10}{%
-\subsection{Page 10}\label{page-10}}
+\subsubsection{data}\label{data}
 
 Is the data accessible? Look for supplemental documents, links to files, and pages of correlation/covariance matrices.
 
-Options: Matrices included, contact author, No, Unclear or Broken Links
+\begin{itemize}
+\tightlist
+\item
+  Yes (1)
+\item
+  Matrices included (2)
+\item
+  Contact author (3)
+\item
+  No (4)
+\item
+  Unclear or broken links (5) \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+\end{itemize}
 
-\hypertarget{page-11}{%
-\subsection{Page 11}\label{page-11}}
+\subsubsection{scale\_name}\label{scale_name}
 
-If the data is available, researchers will be given instructions on how to download it for the next stage of the project, to be shared with analysts.
+What is the name of the instrument/scale they are testing? Please include the entire name, not the abbreviation.
 
-\hypertarget{example-data-analysis-code}{%
-\section{Example Data Analysis Code}\label{example-data-analysis-code}}
+\subsubsection{scale\_ref}\label{scale_ref}
 
-\hypertarget{libraries}{%
-\subsection{Libraries}\label{libraries}}
+What is the citation of the scale they are testing? Copy from the reference section.
 
-\hypertarget{data}{%
-\subsection{Data}\label{data}}
+\subsubsection{group\_number}\label{group_number}
 
-\hypertarget{model-programming}{%
-\subsection{Model Programming}\label{model-programming}}
+How many groups are compared?
 
-Program the model in \texttt{lavaan} syntax including all correlated errors or other adjustments noted by the original authors.
+\subsubsection{group\_names}\label{group_names}
 
-\hypertarget{use-mgcfa-function}{%
-\subsection{Use MGCFA function}\label{use-mgcfa-function}}
+What sample groups are they comparing in this analysis? List groups the way they are described (i.e., do not correct Male/Female to Men/Women, use the names from the paper). Separate groups with a comma.
 
-Use the \texttt{mgcfa} function to run the proposed model steps. This model should replicate their model excluding any partial invariance steps. If they say they will run ``residuals'' but then do not because of partial invariance, only include up to the step that was invariant or partially invariant.
+\subsubsection{what\_steps}\label{what_steps}
 
-\hypertarget{review-model-outputs}{%
-\subsection{Review Model Outputs}\label{review-model-outputs}}
+What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step.
 
-Review model outputs to ensure they do not produce heywood cases or other errors.
+\begin{itemize}
+\tightlist
+\item
+  Equal form (configural) (1)
+\item
+  Equal item loadings (metric) (2)
+\item
+  Equal item intercepts/means (scalar) (3)
+\item
+  Equal item thresholds (4)
+\item
+  Equal item residuals (strict) (5)
+\item
+  Equal item residual covariances (8)
+\item
+  Equal latent means (population means) (6)
+\item
+  Equal latent variances (7)
+\item
+  Equal latent covariances (9)
+\item
+  Equal regressions (10)
+\end{itemize}
 
-\begin{verbatim}
-## # A tibble: 7 x 18
-##    agfi   AIC   BIC   cfi chisq  npar  rmsea rmsea.conf.high   srmr   tli
-##   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>           <dbl>  <dbl> <dbl>
-## 1 0.991 7535. 7647. 0.931  85.3    30 0.0921           0.114 0.0595 0.896
-## 2 0.989 3671. 3761. 0.906  61.4    30 0.103            0.136 0.0749 0.859
-## 3 0.991 3846. 3938. 0.959  44.4    30 0.0741           0.108 0.0525 0.938
-## 4 0.990 7518. 7740. 0.935 106.     60 0.0894           0.113 0.0634 0.903
-## 5 0.989 7526. 7726. 0.919 126.     54 0.0943           0.116 0.0741 0.892
-## 6 0.989 7533. 7711. 0.905 145.     48 0.0970           0.117 0.0753 0.886
-## 7 0.988 7537. 7682. 0.890 167.     39 0.0972           0.116 0.0926 0.886
-## # i 8 more variables: converged <lgl>, estimator <chr>, ngroups <int>,
-## #   missing_method <chr>, nobs <int>, norig <int>, nexcluded <int>, model <chr>
-\end{verbatim}
+\subsubsection{step\_order}\label{step_order}
 
-\begin{verbatim}
-## lavaan 0.6.17 ended normally after 35 iterations
-## 
-##   Estimator                                         ML
-##   Optimization method                           NLMINB
-##   Number of model parameters                        30
-## 
-##   Number of observations                           301
-## 
-## Model Test User Model:
-##                                                       
-##   Test statistic                                85.306
-##   Degrees of freedom                                24
-##   P-value (Chi-square)                           0.000
-\end{verbatim}
+Carry Forward Selected Choices from ``What steps of measurement invariance did they test? Please click all that were used. The names in parentheses are sometimes used to describe each step.''
 
-\hypertarget{replication-model-level}{%
-\subsection{Replication Model Level}\label{replication-model-level}}
+What order did they test the steps in? Please drag and drop them into the order found in the paper (often in a table).
 
-Run the \texttt{bootstrap\_model} function and determine the effect sizes for model level invariance steps. Use the same \texttt{group.equal} constraints as above.
+\begin{itemize}
+\tightlist
+\item
+  Equal form (configural) (1)
+\item
+  Equal item loadings (metric) (2)
+\item
+  Equal item intercepts/means (scalar) (3)
+\item
+  Equal item thresholds (4)
+\item
+  Equal item residuals (strict) (5)
+\item
+  Equal item residual covariances (6)
+\item
+  Equal latent means (population means) (7)
+\item
+  Equal latent variances (8)
+\item
+  Equal latent covariances (9)
+\item
+  Equal regressions (10)
+\end{itemize}
 
-\begin{verbatim}
-## Finished Bootstrap Number: 1
-## Finished Bootstrap Number: 2
-## Finished Bootstrap Number: 3
-## Finished Bootstrap Number: 4
-## Finished Bootstrap Number: 5
-## Finished Bootstrap Number: 6
-## Finished Bootstrap Number: 7
-## Finished Bootstrap Number: 8
-## Finished Bootstrap Number: 9
-## Finished Bootstrap Number: 10
-## Finished Bootstrap Number: 11
-## Finished Bootstrap Number: 12
-## Finished Bootstrap Number: 13
-## Finished Bootstrap Number: 14
-## Finished Bootstrap Number: 15
-## Finished Bootstrap Number: 16
-## Finished Bootstrap Number: 17
-## Finished Bootstrap Number: 18
-## Finished Bootstrap Number: 19
-## Finished Bootstrap Number: 20
-\end{verbatim}
+\subsubsection{metric\_mi}\label{metric_mi}
 
-\begin{tabular}{l|r|r|r|r|r|r}
+What metric did they use to assess measurement invariance? (i.e., CFI, RMSEA, other fit measures, you can use abbreviations of fit indices)
+
+\subsubsection{rule\_mi}\label{rule_mi}
+
+What rule did they use for measurement invariance? (i.e., change in CFI \textless{} .01, chi-square difference test, etc.). List the rule as what would be considered invariant (i.e., passes the test, groups are considered equal).
+
+\subsubsection{invariance\_claim}\label{invariance_claim}
+
+What type of invariance did they claim? Use the step name and their words for the type of invariance. For example, fully invariant to residuals/strict, partially scalar invariant, non-invariant, etc.)
+
+\subsection{ChatGPT Results}\label{chatgpt-results}
+
+\subsubsection{Prompt}\label{prompt}
+
+Given the survey questions in Article\_Coding\_Assessment.docx, answer the survey questions for the panayiotou paper as one answer per row in a tabular format. (attached survey above + pdf)
+
+\subsubsection{Answer}\label{answer}
+
+Here's a table summarizing the answers for the survey questions based on the Panayiotou et al.~paper:
+
+\begin{tabular}{l|l}
 \hline
-model & non\_invariant & random\_non\_invariant & h\_nmi & h\_mi & h\_nmi\_p & h\_mi\_p\\
+Survey Question & Answer\\
 \hline
-intercepts & 0.20 & 0.0 & 0.9272952 & -0.9272952 & 0.2951672 & -0.2951672\\
+DOI Link & https://doi.org/10.1177/10731911221119533\\
 \hline
-loadings & 0.75 & 0.1 & 1.4508940 & -1.4508940 & 0.4618339 & -0.4618339\\
+Does the article report MI? & Yes\\
 \hline
-residuals & 0.05 & 0.0 & 0.4510268 & -0.4510268 & 0.1435663 & -0.1435663\\
+Does the article use CFA/IRT? & Structural Equation Modeling\\
+\hline
+Does the article include real data? & Yes\\
+\hline
+Is the data accessible? & Unclear or broken links (mention of OSF link: https://osf.io/cqxrd/, but not verified in text)\\
+\hline
+Scale name & Revised University of California Los Angeles Loneliness Scale (UCLA-LSR)\\
+\hline
+Scale reference & Russell, D., Peplau, L. A., \& Ferguson, M. L. (1978). Development of a measure of loneliness. Journal of Personality Assessment, 42(3), 290–294.\\
+\hline
+Number of groups compared & Seven\\
+\hline
+Group names & 18–25, 26–35, 36–45, 46–55, 56–65, 66–75, 76+\\
+\hline
+Steps of MI tested & Equal form (configural), Equal item loadings (metric), Equal item intercepts/means (scalar), Partial scalar invariance\\
+\hline
+Order of steps tested & Configural -> Metric -> Scalar\\
+\hline
+Metric used for MI & CFI, RMSEA, SRMR\\
+\hline
+Rule for MI & CFI difference < 0.01\\
+\hline
+Invariance claim & Partial scalar invariance for the UCLA-LSR with varying results across item intercepts\\
 \hline
 \end{tabular}
 
-\hypertarget{replication-parameter-level-partial-invariance}{%
-\subsection{Replication Parameter Level / Partial Invariance}\label{replication-parameter-level-partial-invariance}}
+This table consolidates relevant information. If you need deeper details on any specific part, let me know!
 
-If their model was invariant: use the last step as the \texttt{partial\_step} option. If their model was partially invariant, use the step that was indicated as partially invariant (where they had to relax parameters - if they did this on more than one step, use the last one).
+\subsubsection{Prompt}\label{prompt-1}
+
+Do the same thing for the zager paper attached (attached pdf)
+
+\subsubsection{Answer}\label{answer-1}
+
+Here's a table summarizing the answers for the survey questions based on the Zager Kocjan et al.~paper:
+
+-- table included but see note below --
+
+This table consolidates the key survey answers based on the paper. Let me know if you need additional details or refinements!
+
+\subsubsection{Prompt}\label{prompt-2}
+
+In the tabular analysis of the Zager paper, reformat the table so that the number of groups, names of groups, and invariance claimed for groups are broken out into separate rows
+
+\subsubsection{Answer}\label{answer-2}
+
+Here is the reformatted table for the Zager Kocjan et al.~paper:
+
+\begin{tabular}{l|l}
+\hline
+Survey Question & Answer\\
+\hline
+DOI Link & https://doi.org/10.1177/1073191121993558\\
+\hline
+Does the article report MI? & Yes\\
+\hline
+Does the article use CFA/IRT? & Yes, uses Multi-Group Confirmatory Factor Analysis (MG-CFA)\\
+\hline
+Does the article include real data? & Yes\\
+\hline
+Is the data accessible? & No explicit mention of accessible data or shared datasets.\\
+\hline
+Scale name & Subjective Happiness Scale (SHS)\\
+\hline
+Scale reference & Lyubomirsky, S., \& Lepper, H. S. (1999). A measure of subjective happiness: Preliminary reliability and construct validation. Social Indicators Research, 46(2), 137–155.\\
+\hline
+Number of groups compared (Countries) & 9\\
+\hline
+Names of groups (Countries) & Australia, Colombia, Czech Republic, England, Hungary, Mexico, New Zealand, Slovenia, USA\\
+\hline
+Invariance claimed (Countries) & Configural and metric invariance achieved; partial scalar invariance with varying intercepts for Item 2\\
+\hline
+Number of groups compared (Genders) & 2\\
+\hline
+Names of groups (Genders) & Male, Female\\
+\hline
+Invariance claimed (Genders) & Configural, metric, and scalar invariance achieved\\
+\hline
+Number of groups compared (Age) & 4\\
+\hline
+Names of groups (Age) & 17–30, 31–45, 46–60, 61–75\\
+\hline
+Invariance claimed (Age) & Configural, metric, and scalar invariance achieved\\
+\hline
+Number of groups compared (Time) & 5\\
+\hline
+Names of groups (Time) & Time points 1–5 (3-month intervals over 1 year)\\
+\hline
+Invariance claimed (Time) & Configural, metric, and scalar invariance achieved\\
+\hline
+Steps of MI tested & Configural, Metric, Scalar\\
+\hline
+Order of steps tested & Configural -> Metric -> Scalar\\
+\hline
+Metric used for MI & CFI, RMSEA, SRMR\\
+\hline
+Rule for MI & CFI difference ≤ 0.01, ΔRMSEA ≤ 0.015, ΔSRMR ≤ 0.030\\
+\hline
+\end{tabular}
+
+This breakout provides separate rows for each group type (countries, genders, ages, and time points) and their respective invariance details. Let me know if you need further refinements!
 
 
 \end{document}

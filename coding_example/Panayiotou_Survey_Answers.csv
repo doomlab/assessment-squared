@@ -1,0 +1,15 @@
+Survey Question,Answer
+DOI Link,https://doi.org/10.1177/10731911221119533
+Does the article report MI?,Yes
+Does the article use CFA/IRT?,Structural Equation Modeling
+Does the article include real data?,Yes
+Is the data accessible?,"Unclear or broken links (mention of OSF link: https://osf.io/cqxrd/, but not verified in text)"
+Scale name,Revised University of California Los Angeles Loneliness Scale (UCLA-LSR)
+Scale reference,"Russell, D., Peplau, L. A., & Ferguson, M. L. (1978). Development of a measure of loneliness. Journal of Personality Assessment, 42(3), 290–294."
+Number of groups compared,Seven
+Group names,"18–25, 26–35, 36–45, 46–55, 56–65, 66–75, 76+"
+Steps of MI tested,"Equal form (configural), Equal item loadings (metric), Equal item intercepts/means (scalar), Partial scalar invariance"
+Order of steps tested,Configural -> Metric -> Scalar
+Metric used for MI,"CFI, RMSEA, SRMR"
+Rule for MI,CFI difference < 0.01
+Invariance claim,Partial scalar invariance for the UCLA-LSR with varying results across item intercepts

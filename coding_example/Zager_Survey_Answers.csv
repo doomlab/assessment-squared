@@ -1,0 +1,24 @@
+Survey Question,Answer
+DOI Link,https://doi.org/10.1177/1073191121993558
+Does the article report MI?,Yes
+Does the article use CFA/IRT?,"Yes, uses Multi-Group Confirmatory Factor Analysis (MG-CFA)"
+Does the article include real data?,Yes
+Is the data accessible?,No explicit mention of accessible data or shared datasets.
+Scale name,Subjective Happiness Scale (SHS)
+Scale reference,"Lyubomirsky, S., & Lepper, H. S. (1999). A measure of subjective happiness: Preliminary reliability and construct validation. Social Indicators Research, 46(2), 137–155."
+Number of groups compared (Countries),9
+Names of groups (Countries),"Australia, Colombia, Czech Republic, England, Hungary, Mexico, New Zealand, Slovenia, USA"
+Invariance claimed (Countries),Configural and metric invariance achieved; partial scalar invariance with varying intercepts for Item 2
+Number of groups compared (Genders),2
+Names of groups (Genders),"Male, Female"
+Invariance claimed (Genders),"Configural, metric, and scalar invariance achieved"
+Number of groups compared (Age),4
+Names of groups (Age),"17–30, 31–45, 46–60, 61–75"
+Invariance claimed (Age),"Configural, metric, and scalar invariance achieved"
+Number of groups compared (Time),5
+Names of groups (Time),Time points 1–5 (3-month intervals over 1 year)
+Invariance claimed (Time),"Configural, metric, and scalar invariance achieved"
+Steps of MI tested,"Configural, Metric, Scalar"
+Order of steps tested,Configural -> Metric -> Scalar
+Metric used for MI,"CFI, RMSEA, SRMR"
+Rule for MI,"CFI difference ≤ 0.01, ΔRMSEA ≤ 0.015, ΔSRMR ≤ 0.030"
