@@ -35,16 +35,16 @@ abstract: |
   
   <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "keywords"
-wordcount         : "X"
-floatsintext      : no
-linenumbers       : yes
-draft             : no
-mask              : no
-figurelist        : no
-tablelist         : no
-footnotelist      : no
-classoption       : "man"
+keywords: "keywords"
+wordcount: "X"
+floatsintext: no
+linenumbers: yes
+draft: no
+mask: no
+figurelist: no
+tablelist: no
+footnotelist: no
+classoption: "man"
 header-includes:
   - |
     \makeatletter
@@ -58,12 +58,12 @@ header-includes:
       {-\z@\relax}%
       {\normalfont\normalsize\bfseries\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
     \makeatother
-csl               : "`r system.file('rmd', 'apa7.csl', package = 'papaja')`"
-documentclass     : "apa7"
-output: 
-  papaja::apa6_pdf:
-    latex_engine: xelatex
-appendix          :
+csl: "`r system.file('rmd', 'apa7.csl', package = 'papaja')`"
+documentclass: "apa7"
+output: papaja::apa6_docx
+  #papaja::apa6_pdf:
+  #  latex_engine: xelatex
+appendix:
   - "appendix_1.Rmd"
   - "appendix_2.Rmd"
 bibliography: references.bib
@@ -99,8 +99,9 @@ download_file(file = "rr_manuscript.Rmd",
             gpath = "Assessment of Assessment",
             gfile = "rr_manuscript_trackdown")
 # to google
-update_file(file = "PG_Manuscript_2023.Rmd",
-            gfile = "grade_lean_trackdown"
+update_file(file = "rr_manuscript.Rmd",
+            gpath = "Assessment of Assessment",
+            gfile = "rr_manuscript_trackdown",
             rich_text = TRUE,
             hide_code = TRUE)
 ```
@@ -272,7 +273,7 @@ save(saved_boot_partial, file = "../data/saved_boot_partial_example.Rdata")
 ```{r table-1-example,  results = 'asis'}
 load("../data/saved_boot_example.Rdata")
 apa_table(
-  saved_boot_model,
+  head(saved_boot_model),
   note = "",
   caption = ""
 )
@@ -283,7 +284,7 @@ If a model showed any partial invariance, we will then use the partial bootstrap
 ```{r table-2-example, results = 'asis'}
 load("../data/saved_boot_partial_example.Rdata")
 apa_table(
-  saved_boot_partial$boot_DF,
+  head(saved_boot_partial$boot_DF),
   note = "",
   caption = ""
 )
