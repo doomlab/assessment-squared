@@ -1,10 +1,12 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-%
 \documentclass[
+  english,
   man]{apa7}
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -35,26 +37,6 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\usepackage{graphicx}
-\makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
-% Set default figure placement to htbp
-\def\fps@figure{htbp}
-\makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
 \makeatletter
 \ifx\paragraph\undefined\else
@@ -77,6 +59,61 @@
   \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
   \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
 \makeatother
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
@@ -116,13 +153,15 @@
 \else
 \usepackage[bidi=default]{babel}
 \fi
-\babelprovide[main,import]{english}
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
 \ifLuaTeX
   \usepackage[english]{selnolig} % disable illegal ligatures
 \fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 % Manuscript styling
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -188,7 +227,7 @@
   }
 {}{\PatchFailed}
 \makeatother
-\keywords{keywords\newline\indent Word count: X}
+\keywords{measurement invariance, assessment, registered report}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -215,41 +254,32 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={The title},
-  pdfauthor={First Author1 \& Ernst-August Doelle1,2},
+  pdftitle={The Landscape of Measurement Invariance: A Database and Effect Size Analysis of Assessment},
+  pdfauthor={Erin M. Buchanan1, Jeffrey M Pavlacic2, \& Savannah C. Lewis3},
   pdflang={en-EN},
-  pdfkeywords={keywords},
+  pdfkeywords={measurement invariance, assessment, registered report},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{The title}
-\author{First Author\textsuperscript{1} \& Ernst-August Doelle\textsuperscript{1,2}}
+\title{The Landscape of Measurement Invariance: A Database and Effect Size Analysis of Assessment}
+\author{Erin M. Buchanan\textsuperscript{1}, Jeffrey M Pavlacic\textsuperscript{2}, \& Savannah C. Lewis\textsuperscript{3}}
 \date{}
 
 
-\shorttitle{Title}
+\shorttitle{MEASUREMENT INVARIANCE}
 
 \authornote{
 
-Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
-Enter author note here.
+The authors made the following contributions. Erin M. Buchanan: Conceptualization, Project Administration, Writing - Original Draft Preparation; Jeffrey M Pavlacic: Conceptualization, Project Administration, Writing - Original Draft Preparation; Savannah C. Lewis: Project Administration, Writing - Original Draft Preparation.
 
-The authors made the following contributions. First Author: Conceptualization, Writing - Original Draft Preparation, Writing - Review \& Editing; Ernst-August Doelle: Writing - Review \& Editing, Supervision.
-
-Correspondence concerning this article should be addressed to First Author, Postal address. E-mail: \href{mailto:my@email.com}{\nolinkurl{my@email.com}}
+Correspondence concerning this article should be addressed to Erin M. Buchanan, 326 Market St., Harrisburg, PA, 17101. E-mail: \href{mailto:ebuchanan@harrisburgu.edu}{\nolinkurl{ebuchanan@harrisburgu.edu}}
 
 }
 
-\affiliation{\vspace{0.5cm}\textsuperscript{1} Wilhelm-Wundt-University\\\textsuperscript{2} Konstanz Business School}
+\affiliation{\vspace{0.5cm}\textsuperscript{1} Harrisburg University of Science and Technology\\\textsuperscript{2} Medical University of South Carolina\\\textsuperscript{3} University of Alabama}
 
 \abstract{%
-One or two sentences providing a \textbf{basic introduction} to the field, comprehensible to a scientist in any discipline.
-Two to three sentences of \textbf{more detailed background}, comprehensible to scientists in related disciplines.
-One sentence clearly stating the \textbf{general problem} being addressed by this particular study.
-One sentence summarizing the main result (with the words ``\textbf{here we show}'' or their equivalent).
-Two or three sentences explaining what the \textbf{main result} reveals in direct comparison to what was thought to be the case previously, or how the main result adds to previous knowledge.
-One or two sentences to put the results into a more \textbf{general context}.
-Two or three sentences to provide a \textbf{broader perspective}, readily comprehensible to a scientist in any discipline.
+Measurement invariance testing is essential for determining whether psychological instruments assess the same latent constructs across groups. Without invariance, observed group differences may reflect measurement artifacts rather than meaningful differences in the constructs being studied. Despite its importance, prior meta-research suggests that measurement invariance tests are infrequently reported and often difficult to reproduce. Furthermore, current practice typically relies on binary decision rules based on changes in fit indices, which provide limited information about the magnitude or practical importance of potential non-invariance. In this registered report, we propose a systematic investigation of measurement invariance analyses published in Assessment. We will compile a database of articles reporting measurement invariance tests and code key characteristics, including the instruments studied, groups compared, analytic procedures, and reported conclusions. For studies with accessible data, we will reproduce the reported analyses and estimate effect sizes for measurement invariance using the visualizemi R package. This approach uses bootstrapping and randomized group assignments to estimate the likelihood that observed invariance results would replicate in new samples. We will summarize the distributions of model-level and parameter-level effect sizes across studies. The resulting database and analyses will provide a resource for meta-research and offer empirical guidance for interpreting measurement invariance and defining smallest effect sizes of interest.
 }
 
 
@@ -259,11 +289,11 @@ Two or three sentences to provide a \textbf{broader perspective}, readily compre
 
 Psychological research involves the difficult task of assessing non-observable phenomena, such as depression or meaning in life, as a measurement proxy for testing hypotheses. Researchers develop surveys or instruments to estimate underlying constructs of interest (DeVellis \& Thorpe, 2022), with item relationships often validated with latent variable modeling (i.e., structural equation modeling {[}SEM{]}) or item response theory (IRT, Byrne, 2001). Entire journals, such as \emph{Assessment,} are devoted to the publication of scale development and (re)-assessment across populations - a necessary avenue given that development information for many scales is not reported in other journal articles (Barry et al., 2014; Weidman et al., 2017). Scale development manuscripts are crucial to interpretation of studies that use these measures and determining the usefulness of measured scores (Flake \& Fried, 2020).
 
-Confirmatory factor analysis (CFA) is a common analysis that examines the relationship between observed variables and latent constructions, helping determine the overall model fit to the data collected (\textbf{kline2015?}). Researchers specify the measurement model that demonstrates the proposed relation between measured items and latent variables and use fit indices such as the Tucker Lewis Index (TLI, \textbf{tucker1973?}), Comparative Fit Index (CFI, \textbf{bentler1990?}), Root Mean Square Error of Approximation (RMSEA, \textbf{steiger1990?}), and standardized root mean residual (SRMR, \textbf{bentler1995?}) to determine model fit. Generalized measures are designed, in theory, to provide the same assessment for different populations, but researchers can extend their investigation of item and latent variable properties by examining scale functioning across groups or subpopulations within the data. Multigroup CFA (MGCFA, Meredith, 1993) examines different components of a CFA model for measurement invariance. Measurement invariance (or equivalence) implies that the instrument provides the same latent variable measurement for all populations. Equivalence in measurement is desirable, as it allows for the same interpretation of latent variable scores across groups, as well as knowing that group differences are not attributable to differences the way the measure operates within groups.
+Confirmatory factor analysis (CFA) is a common analysis that examines the relationship between observed variables and latent constructions, helping determine the overall model fit to the data collected (Kline, 2016). Researchers specify the measurement model that demonstrates the proposed relation between measured items and latent variables and use fit indices such as the Tucker Lewis Index (TLI, Tucker \& Lewis, 1973), Comparative Fit Index (CFI, Bentler, 1990), Root Mean Square Error of Approximation (RMSEA, Steiger, 1990), and standardized root mean residual (SRMR, Bentler, 1995) to determine model fit. Generalized measures are designed, in theory, to provide the same assessment for different populations, but researchers can extend their investigation of item and latent variable properties by examining scale functioning across groups or subpopulations within the data. Multigroup CFA (MGCFA, Meredith, 1993) examines different components of a CFA model for measurement invariance. Measurement invariance (or equivalence) implies that the instrument provides the same latent variable measurement for all populations. Equivalence in measurement is desirable, as it allows for the same interpretation of latent variable scores across groups, as well as knowing that group differences are not attributable to differences the way the measure operates within groups.
 
-Measurement invariance is tested by sequentially examining models with group equality constraints. There are several versions of the procedure, but the terminology and steps from (\textbf{brown2005?}) are commonly found within studies on psychological constructs. First, groups are combined together within a \emph{configural} model to assess for the same factor structure across groups. The factor loadings for each group are then set to be equal for the assessment of \emph{metric} invariance, implying that each group has the same strength of item relation to the latent variable. \emph{Scalar} invariance is this examined by constraining the item intercepts across groups, which implies that each group shows the same item means. Last, \emph{strict} invariance may be tested by constraining the item residuals to be equal across groups, suggesting that each group shows the same variance across items. Each step is compared to the previous step to determine if the equality constraints result in a degradation of fit, often by using \(\Delta\) CFI or \(\Delta\) RMSEA (\textbf{cheung2002?}). Scales that demonstrate measurement invariance allow researchers to use scores to make group comparisons without adjustments for measurement differences (\textbf{millsap2011?}).
+Measurement invariance is tested by sequentially examining models with group equality constraints. There are several versions of the procedure, but the terminology and steps from Brown (2015) are commonly found within studies on psychological constructs. First, groups are combined together within a \emph{configural} model to assess for the same factor structure across groups. The factor loadings for each group are then set to be equal for the assessment of \emph{metric} invariance, implying that each group has the same strength of item relation to the latent variable. \emph{Scalar} invariance is this examined by constraining the item intercepts across groups, which implies that each group shows the same item means. Last, \emph{strict} invariance may be tested by constraining the item residuals to be equal across groups, suggesting that each group shows the same variance across items. Each step is compared to the previous step to determine if the equality constraints result in a degradation of fit, often by using \(\Delta\) CFI or \(\Delta\) RMSEA (Cheung \& Rensvold, 2002). Scales that demonstrate measurement invariance allow researchers to use scores to make group comparisons without adjustments for measurement differences (Millsap, 2011)
 
-Non-invariance implies that individuals in separate populations interpret items differently (Cheung \& Rensvold, 2000; Dong \& Dumas, 2020; Liu et al., 2017; Wicherts et al., 2005), which may affect the overall latent variable score. Thus, it can be difficult to know if group differences are due to population differences or measurement. Being unaware of non-invariance in measures could lead to incorrect interpretations of group differences (Van De Schoot et al., 2015), and these results could potentially explain the replication or lack-thereof for results across studies (Maassen et al., 2023). For example, (\textbf{trent2013?}) examined the Revised Child Anxiety and Depression Scale (RCADS, \textbf{chorpita2000?}), an instrument that examines depression and anxiety disorders in children. They determined that the six-factor structure was appropriate for White and Black youth (\emph{configural}) and that the factor loadings were also equal across groups (\emph{metric}). They found that children differed in their item intercepts (\emph{scalar}) for five items across the scale, which suggested that the same latent construct would represent different scale scores on those items. These results often suggest partial invariance, wherein the scale often generalizes minus a few items (\textbf{cheung1999?}).
+Non-invariance implies that individuals in separate populations interpret items differently (Cheung \& Rensvold, 2000; Dong \& Dumas, 2020; Liu et al., 2017; Wicherts et al., 2005), which may affect the overall latent variable score. Thus, it can be difficult to know if group differences are due to population differences or measurement. Being unaware of non-invariance in measures could lead to incorrect interpretations of group differences (Van De Schoot et al., 2015), and these results could potentially explain the replication or lack-thereof for results across studies (Maassen et al., 2023). For example, Trent et al. (2013) examined the Revised Child Anxiety and Depression Scale (RCADS, Chorpita et al., 2000), an instrument that examines depression and anxiety disorders in children. They determined that the six-factor structure was appropriate for White and Black youth (\emph{configural}) and that the factor loadings were also equal across groups (\emph{metric}). They found that children differed in their item intercepts (\emph{scalar}) for five items across the scale, which suggested that the same latent construct would represent different scale scores on those items. These results often suggest partial invariance, wherein the scale often generalizes minus a few items (Cheung \& Rensvold, 1999).
 
 Partial invariance is critical for valid interpretations because without it, researchers risk conflating true group differences with artifacts of measurement bias. Failure to identify and address non-invariance can lead to inaccurate conclusions about group-level comparisons and potentially undermine the validity of psychological research. Despite its importance, researchers frequently overlook measurement invariance testing, as highlighted by Maassen et al. (2023). Their study examined the reporting of measurement invariance tests across \emph{Judgment and Decision Making}, \emph{PLoS One}, and \emph{Psychological Science} and found that 1) very few papers included measurement invariance tests; 2) none of those reported tests could be reproduced; and 3) very little measurement invariance was found across when new tests could be examined.
 
@@ -278,7 +308,7 @@ At the moment, it is difficult to know what effect sizes one may expect to find 
 \subsection{Database Curation}\label{database-curation}
 
 \begin{figure}
-\includegraphics[width=1.69in]{../pics/data_curation} \caption{A flow chart of potential exclusions to create the database of measurement invariance.}\label{fig:figure-process}
+\includegraphics[width=1.69in]{../pics/data_curation} \caption{A flow chart of potential exclusions to create the database of measurement invariance (MI).}\label{fig:figure-process}
 \end{figure}
 
 Using \emph{Assessment}'s online search feature, we will search for \textbf{measurement invariance} allowing for either term to be present in the manuscript for inclusion in the first round of papers (which would also cover related terms such as \textbf{measurement equivalence}). As of December 2024, this search returns over 600 articles from 1994 (i.e., the journal's establishment date) to 2024 publications. The data will then be filtered to only include research articles under the article type filter present on the journal website. These citations will be exported to the Zotero group created for this project found at: \url{https://www.zotero.org/groups/5407184/measurement_invariance_assessment}. Figure \ref{fig:figure-process} displays the filtering and coding process to create the measurement invariance database. We chose this journal primarily due to journal focus, and the number of available articles indicates a large sample size of articles to investigate measurement invariance.
@@ -287,7 +317,7 @@ Using \emph{Assessment}'s online search feature, we will search for \textbf{meas
 
 \textbf{Inclusion}: Each article will be coded for inclusion in the measurement invariance database and for potential further analysis by filling out a coding survey created for this purpose. The coding scale is included in Appendix A. We created the original article inclusion form using students enrolled in a structural equation modeling course, and pilot tested several articles to determine the scope of the project (see results below). We then tested if ChatGPT could respond to the survey questions and answer these questions accurately if given a copy of the research article. ChatGPT 4.0 appears to be able to answer questions accurately, and therefore, we will use the 4.0 model (or higher depending on time of study) to initially code articles. The example prompt and output from ChatGPT for an article with multiple invariance tests is included in Appendix A. The survey includes items to determine if the article includes measurement invariance, how the measurement was analyzed (i.e., structural equation modeling, item response theory, or other), and if the study included participant data (i.e., no simulation studies). Only research articles that used structural equation modeling to examine measurement invariance on participant data will be included in the database.
 
-Measurement Invariance Variables: The next portion of the coding survey includes information about the measurement invariance test(s) in the manuscript. Each measurement test will be coded separately. ChatGPT will include the name and citation of the scale assessed, what groups are compared in the measurement invariance test, and the steps performed in the measurement invariance assessment. Once these steps are selected, ChatGPT will order them based on the manuscript, list the type of invariance claimed, and list the fit index used for determination of invariance, along with the rule (i.e., CFI, \(\Delta\)CFI \textgreater{} .01, RMSEA, \(\Delta\)RMSEA \textgreater{} .015 (\textbf{cheung2002?})). If the data appears to be included, links for the repository will be extracted.
+Measurement Invariance Variables: The next portion of the coding survey includes information about the measurement invariance test(s) in the manuscript. Each measurement test will be coded separately. ChatGPT will include the name and citation of the scale assessed, what groups are compared in the measurement invariance test, and the steps performed in the measurement invariance assessment. Once these steps are selected, ChatGPT will order them based on the manuscript, list the type of invariance claimed, and list the fit index used for determination of invariance, along with the rule (i.e., CFI, \(\Delta\)CFI \textgreater{} .01, RMSEA, \(\Delta\)RMSEA \textgreater{} .015 (Cheung \& Rensvold, 2002)). If the data appears to be included, links for the repository will be extracted.
 
 \subsubsection{Coders}\label{coders}
 
@@ -327,26 +357,27 @@ We will incorporate this information in Figure \ref{fig:figure-process} similar 
 \tightlist
 \item
   Measurement Invariance Test Statistics
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Commonly reported scales
-  \item
-    Frequency of number of groups compared
-  \item
-    Frequency of data inclusion for reproducibility
-  \end{itemize}
+\item
+  Commonly reported scales
+\item
+  Frequency of number of groups compared
+\item
+  Frequency of data inclusion for reproducibility
 \end{itemize}
 
 The statistics from this section will be calculated based on the number of papers coded.
 
-\begin{verbatim}
--   Commonly occurring group comparisons: we will code this variable into overall category labels. Variable group labels will be determined based on results from the study, but we expect certain categories such as age, gender/sex, language, country, and race/ethnicity. 
--   Frequency of each type of measurement invariance assessment (i.e., number of equal form, equal item intercepts, etc.)
--   Commonly used fit statistics and rules of thumb for invariance testing
--   Frequency of each type of measurement invariance claimed
-\end{verbatim}
+\begin{itemize}
+\tightlist
+\item
+  Commonly occurring group comparisons: we will code this variable into overall category labels. Variable group labels will be determined based on results from the study, but we expect certain categories such as age, gender/sex, language, country, and race/ethnicity.
+\item
+  Frequency of each type of measurement invariance assessment (i.e., number of equal form, equal item intercepts, etc.)
+\item
+  Commonly used fit statistics and rules of thumb for invariance testing
+\item
+  Frequency of each type of measurement invariance claimed
+\end{itemize}
 
 The statistics from this section will be calculated based on the total number of measurement invariance tests coded. If a paper includes multiple invariance tests, it will therefore be included multiple times in the overall assessment of measurement invariance claimed (for example).
 
@@ -354,9 +385,69 @@ The statistics from this section will be calculated based on the total number of
 
 Each measurement invariance test that included data will then be coded using the template in Appendix 2. Using the \texttt{visualizemi} package (Buchanan, 2024), coders will program a multigroup confirmatory factor analysis using the steps outlined from the research article and the provided data. Each model will first be examined for convergence across the same measurement invariance steps from the published articles, only using information present within the article or supplemental material for factor structure and any modifications made to scale structure (i.e., correlated residuals). Models that do not converge will be noted, and no more analysis on that data will be performed. Each model will then be tested for replication effect sizes rates at the model and parameter level. For example, an article that claimed measurement invariance for equal form, loadings, and intercepts will be tested with these same steps to determine the effect size of potential replication for each of those steps.
 
-The \texttt{visualizemi} package calculates the effect size of potential replication by bootstrapping the original data with replacement and compares these results to the same bootstrapped dataset that has had the group labels randomized. Table \ref{tab:table-1-example} shows the results of model level bootstrapping using the Holzinger-Swineford data embedded in the \emph{lavaan} package {[}CITE{]}. The factor loadings (\emph{metric} invariance) were non-invariant when compared to a \emph{configural} model 90\% of the time while the randomized data was non-invariant only 10\% of the time. The \(h_{mni}\) effect size represents the standardized difference between these two proportions and the amount of expected non-invariance if the study was replicated with similar data. The range of \(h\) statistics is \(\pi\), so the \(h_{mni_p}\) column represents the \(h_{mni}\) scaled -1 to 1 for easier interpretation. At zero, we would expect to find that the bootstrapped data and randomized data do not show differences (thus, should be invariant), and as the \(h_{mni_p}\) statistic approaches 1, the more likely we are to find non-invariance in new samples.
+The \texttt{visualizemi} package calculates the effect size of potential replication by bootstrapping the original data with replacement and compares these results to the same bootstrapped dataset that has had the group labels randomized. Table \ref{tab:table-1-example} shows the results of model level bootstrapping using the Holzinger-Swineford data embedded in the \emph{lavaan} package (Rosseel et al., 2022). The factor loadings (\emph{metric} invariance) were non-invariant when compared to a \emph{configural} model 90\% of the time while the randomized data was non-invariant only 10\% of the time. The \(h_{mni}\) effect size represents the standardized difference between these two proportions and the amount of expected non-invariance if the study was replicated with similar data. The range of \(h\) statistics is \(\pi\), so the \(h_{mni_p}\) column represents the \(h_{mni}\) scaled -1 to 1 for easier interpretation. At zero, we would expect to find that the bootstrapped data and randomized data do not show differences (thus, should be invariant), and as the \(h_{mni_p}\) statistic approaches 1, the more likely we are to find non-invariance in new samples.
 
-If a model showed any partial invariance, we will then use the partial bootstrapping function in \texttt{visualizemi} to calculate the effect size of replicating partial invariance and the difference between parameter estimates. Given the HolzingerSwineford1939 data shown in Table \ref{tab:table-1-example}, we would examine the results of partial invariance at the loadings step to determine where the potential group differences lie. Each factor loading would be individually relaxed one at a time and the bootstrapping procedure is examined for each loading separately. Table \ref{tab:table-2-example} demonstrates the results of the bootstrapping for the HolzingerSwineford1939 data, including the number of non-invariant results for each individual factor loading. We will report \(h_{mni_p}\) for each parameter, along with \(d_s\) for the group size differences between groups for bootstrapped estimates. The effect size difference between parameter estimates is calculated by using \(d_s\) for independent samples groups. These estimates are calculated on the standardized loadings so they are comparable across different scale examples.
+\begin{table}[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table-1-example}Example output of `visualizemi` for model effect sizes}
+
+\begin{tabular}{lllllll}
+\toprule
+model & \multicolumn{1}{c}{non\_invariant} & \multicolumn{1}{c}{random\_non\_invariant} & \multicolumn{1}{c}{h\_nmi} & \multicolumn{1}{c}{h\_mi} & \multicolumn{1}{c}{h\_nmi\_p} & \multicolumn{1}{c}{h\_mi\_p}\\
+\midrule
+intercepts & 0.15 & 0.01 & 0.59 & -0.59 & 0.19 & -0.19\\
+loadings & 0.80 & 0.06 & 1.74 & -1.74 & 0.55 & -0.55\\
+residuals & 0.04 & 0.06 & -0.11 & 0.11 & -0.03 & 0.03\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} }
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table}
+
+If a model showed any partial invariance, we will then use the partial bootstrapping function in \texttt{visualizemi} to calculate the effect size of replicating partial invariance and the difference between parameter estimates. Given the \texttt{HolzingerSwineford1939} data shown in Table \ref{tab:table-1-example}, we would examine the results of partial invariance at the loadings step to determine where the potential group differences lie. Each factor loading would be individually relaxed one at a time and the bootstrapping procedure is examined for each loading separately. Table \ref{tab:table-2-example} demonstrates the results of the bootstrapping for the \texttt{HolzingerSwineford1939} data, including the number of non-invariant results for each individual factor loading. We will report \(h_{mni_p}\) for each parameter, along with \(d_s\) for the group size differences between groups for bootstrapped estimates. The effect size difference between parameter estimates is calculated by using \(d_s\) for independent samples groups. These estimates are calculated on the standardized loadings so they are comparable across different scale examples.
+
+\begin{table}[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table-2-example}Example output of `visualizemi` for parameter effect sizes}
+
+\begin{tabular}{lllllll}
+\toprule
+term & \multicolumn{1}{c}{non\_invariant} & \multicolumn{1}{c}{random\_non\_invariant} & \multicolumn{1}{c}{h\_nmi} & \multicolumn{1}{c}{h\_mi} & \multicolumn{1}{c}{h\_nmi\_p} & \multicolumn{1}{c}{h\_mi\_p}\\
+\midrule
+speed =\textasciitilde{} x7 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+speed =\textasciitilde{} x8 & 0.86 & 0.72 & 0.35 & -0.35 & 0.11 & -0.11\\
+speed =\textasciitilde{} x9 & 0.88 & 0.76 & 0.31 & -0.31 & 0.10 & -0.10\\
+textual =\textasciitilde{} x4 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+textual =\textasciitilde{} x5 & 0.96 & 0.80 & 0.51 & -0.51 & 0.16 & -0.16\\
+textual =\textasciitilde{} x6 & 0.96 & 0.80 & 0.51 & -0.51 & 0.16 & -0.16\\
+visual =\textasciitilde{} x1 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+visual =\textasciitilde{} x2 & 0.92 & 0.77 & 0.43 & -0.43 & 0.14 & -0.14\\
+visual =\textasciitilde{} x3 & 0.92 & 0.78 & 0.41 & -0.41 & 0.13 & -0.13\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} }
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table}
 
 Each measurement invariance comparison found in the database curation (with data) will be programmed by one coder and checked by another coder using a small number of bootstrap simulations. If a disagreement arises during the code checking process, which cannot be resolved by the coders, the lead author will make the final decision. After both coders and the lead author (if applicable) agree that the coding matches the article data, the model and parameter level simulations will be run over 1000 simulations on a high performance computing server to ensure consistency in versions of \emph{R} and packages. The exact versions will be reported for reproducibility. The results will be exported in both an HTML format and Rdata for further use. These files will be available on our repository at \url{https://github.com/doomlab/assessment-squared}.
 
@@ -427,6 +518,15 @@ Anvari, F., \& Lakens, D. (2021). Using anchor-based methods to determine the sm
 \bibitem[\citeproctext]{ref-barry2014}
 Barry, A. E., Chaney, B., Piazza-Gardner, A. K., \& Chavarria, E. A. (2014). Validity and Reliability Reporting Practices in the Field of Health Education and Behavior: A Review of Seven Journals. \emph{Health Education \& Behavior}, \emph{41}(1), 12--18. \url{https://doi.org/10.1177/1090198113483139}
 
+\bibitem[\citeproctext]{ref-bentler1990}
+Bentler, P. M. (1990). Comparative fit indexes in structural models. \emph{Psychological Bulletin}, \emph{107}(2), 238--246. \url{https://doi.org/10.1037/0033-2909.107.2.238}
+
+\bibitem[\citeproctext]{ref-bentler1995}
+Bentler, P. M. (1995). \emph{EQS structural equations program manual}.
+
+\bibitem[\citeproctext]{ref-brown2015}
+Brown, T. A. (2015). \emph{Confirmatory factor analysis for applied research} (Second edition). The Guilford Press.
+
 \bibitem[\citeproctext]{ref-buchanan2024}
 Buchanan, E. M. (2024). Visualizemi: Visualization, Effect Size, and Replication of Measurement Invariance for Registered Reports. \emph{Assessment}, 10731911241280763. \url{https://doi.org/10.1177/10731911241280763}
 
@@ -436,8 +536,17 @@ Byrne, B. M. (2001). Structural Equation Modeling With AMOS, EQS, and LISREL: Co
 \bibitem[\citeproctext]{ref-byrne1989}
 Byrne, B. M., Shavelson, R. J., \& Muthén, B. (1989). Testing for the equivalence of factor covariance and mean structures: The issue of partial measurement invariance. \emph{Psychological Bulletin}, \emph{105}(3), 456--466. \url{https://doi.org/10.1037/0033-2909.105.3.456}
 
+\bibitem[\citeproctext]{ref-cheung1999}
+Cheung, G. W., \& Rensvold, R. B. (1999). Testing Factorial Invariance across Groups: A Reconceptualization and Proposed New Method. \emph{Journal of Management}, \emph{25}(1), 1--27. \url{https://doi.org/10.1177/014920639902500101}
+
 \bibitem[\citeproctext]{ref-cheung2000}
 Cheung, G. W., \& Rensvold, R. B. (2000). Assessing Extreme and Acquiescence Response Sets in Cross-Cultural Research Using Structural Equations Modeling. \emph{Journal of Cross-Cultural Psychology}, \emph{31}(2), 187--212. \url{https://doi.org/10.1177/0022022100031002003}
+
+\bibitem[\citeproctext]{ref-cheung2002}
+Cheung, G. W., \& Rensvold, R. B. (2002). Evaluating goodness-of-fit indexes for testing measurement invariance. \emph{Structural Equation Modeling: A Multidisciplinary Journal}, \emph{9}(2), 233--255. \url{https://doi.org/10.1207/S15328007SEM0902_5}
+
+\bibitem[\citeproctext]{ref-chorpita2000}
+Chorpita, B. F., Yim, L., Moffitt, C., Umemoto, L. A., \& Francis, S. E. (2000). Assessment of symptoms of DSM-IV anxiety and depression in children: a revised child anxiety and depression scale. \emph{Behaviour Research and Therapy}, \emph{38}(8), 835--855. \url{https://doi.org/10.1016/S0005-7967(99)00130-8}
 
 \bibitem[\citeproctext]{ref-devellis2022}
 DeVellis, R. F., \& Thorpe, C. T. (2022). \emph{Scale development: Theory and applications} (Fifth edition). SAGE Publications, Inc.
@@ -447,6 +556,9 @@ Dong, Y., \& Dumas, D. (2020). Are personality measures valid for different popu
 
 \bibitem[\citeproctext]{ref-flake2020}
 Flake, J. K., \& Fried, E. I. (2020). Measurement schmeasurement: Questionable measurement practices and how to avoid them. \emph{Advances in Methods and Practices in Psychological Science}, \emph{3}(4), 456465. \url{https://doi.org/10.1177/2515245920952393}
+
+\bibitem[\citeproctext]{ref-kline2016}
+Kline, R. B. (2016). \emph{Principles and practice of structural equation modeling} (Fourth edition). The Guilford Press.
 
 \bibitem[\citeproctext]{ref-lakens2018}
 Lakens, D., Scheel, A. M., \& Isager, P. M. (2018). Equivalence Testing for Psychological Research: A Tutorial. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(2), 259--269. \url{https://doi.org/10.1177/2515245918770963}
@@ -463,11 +575,26 @@ Marsh, H. W., Hau, K.-T., \& Wen, Z. (2004). In search of golden rules: Comment 
 \bibitem[\citeproctext]{ref-meredith1993}
 Meredith, W. (1993). Measurement invariance, factor analysis and factorial invariance. \emph{Psychometrika}, \emph{58}(4), 525--543. \url{https://doi.org/10.1007/BF02294825}
 
+\bibitem[\citeproctext]{ref-millsap2011}
+Millsap, R. E. (2011). \emph{Statistical approaches to measurement invariance}. Routledge.
+
 \bibitem[\citeproctext]{ref-nye2011}
 Nye, C. D., \& Drasgow, F. (2011). Effect size indices for analyses of measurement equivalence: Understanding the practical importance of differences between groups. \emph{Journal of Applied Psychology}, \emph{96}(5), 966--980. \url{https://doi.org/10.1037/a0022955}
 
 \bibitem[\citeproctext]{ref-putnick2016}
 Putnick, D. L., \& Bornstein, M. H. (2016). Measurement invariance conventions and reporting: The state of the art and future directions for psychological research. \emph{Developmental Review}, \emph{41}, 71--90. \url{https://doi.org/10.1016/j.dr.2016.06.004}
+
+\bibitem[\citeproctext]{ref-rosseel2022}
+Rosseel, Y., Jorgensen, T. D., Rockwood, N., Oberski, D., Byrnes, J., Vanbrabant, L., Savalei, V., Merkle, E., Hallquist, M., Rhemtulla, M., Katsikatsou, M., Barendse, M., Scharf, F., \& Du, H. (2022). \emph{Lavaan: Latent variable analysis}. \url{https://CRAN.R-project.org/package=lavaan}
+
+\bibitem[\citeproctext]{ref-steiger1990}
+Steiger, J. H. (1990). Structural model evaluation and modification: An interval estimation approach. \emph{Multivariate Behavioral Research}, \emph{25}(2), 173--180. \url{https://doi.org/10.1207/s15327906mbr2502_4}
+
+\bibitem[\citeproctext]{ref-trent2013}
+Trent, L. R., Buchanan, E., Ebesutani, C., Ale, C. M., Heiden, L., Hight, T. L., Damon, J. D., \& Young, J. (2013). A measurement invariance examination of the revised child anxiety and depression scale in a southern sample: Differential item functioning between african american and caucasian youth. \emph{Assessment}, \emph{20}(2), 175--187. \url{https://doi.org/10.1177/1073191112450907}
+
+\bibitem[\citeproctext]{ref-tucker1973}
+Tucker, L. R., \& Lewis, C. (1973). A reliability coefficient for maximum likelihood factor analysis. \emph{Psychometrika}, \emph{38}(1), 1--10. \url{https://doi.org/10.1007/BF02291170}
 
 \bibitem[\citeproctext]{ref-vandeschoot2015}
 Van De Schoot, R., Schmidt, P., De Beuckelaer, A., Lek, K., \& Zondervan-Zwijnenburg, M. (2015). Editorial: Measurement invariance. \emph{Frontiers in Psychology}, \emph{6}. \url{https://www.frontiersin.org/articles/10.3389/fpsyg.2015.01064}
@@ -775,6 +902,240 @@ Rule for MI & CFI difference ≤ 0.01, ΔRMSEA ≤ 0.015, ΔSRMR ≤ 0.030\\
 \end{tabular}
 
 This breakout provides separate rows for each group type (countries, genders, ages, and time points) and their respective invariance details. Let me know if you need further refinements!
+
+\section{Example Data Analysis Code}\label{example-data-analysis-code}
+
+\subsection{Libraries}\label{libraries}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lavaan)}
+\FunctionTok{library}\NormalTok{(visualizemi)}
+\FunctionTok{library}\NormalTok{(rio)}
+\CommentTok{\# set the seed}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{43843}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Data}\label{data-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# import the dataset here }
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Model Programming}\label{model-programming}
+
+Program the model in \texttt{lavaan} syntax including all correlated errors or other adjustments noted by the original authors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# example model }
+\NormalTok{HS.model }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{} visual  =\textasciitilde{} x1 + x2 + x3}
+\StringTok{              textual =\textasciitilde{} x4 + x5 + x6}
+\StringTok{              speed   =\textasciitilde{} x7 + x8 + x9 \textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Use MGCFA function}\label{use-mgcfa-function}
+
+Use the \texttt{mgcfa} function to run the proposed model steps. This model should replicate their model excluding any partial invariance steps. If they say they will run ``residuals'' but then do not because of partial invariance, only include up to the step that was invariant or partially invariant.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+                    \CommentTok{\# cfa model}
+\NormalTok{saved\_mgcfa }\OtherTok{\textless{}{-}} \FunctionTok{mgcfa}\NormalTok{(}\AttributeTok{model =}\NormalTok{ HS.model,}
+                     \CommentTok{\# dataset in data frame }
+                     \AttributeTok{data =}\NormalTok{ HolzingerSwineford1939, }
+                     \CommentTok{\# grouping variable column as a character}
+                     \AttributeTok{group =} \StringTok{"sex"}\NormalTok{,}
+                     \CommentTok{\# lavaan syntax for group constraints}
+                     \AttributeTok{group.equal =} \FunctionTok{c}\NormalTok{(}\StringTok{"loadings"}\NormalTok{, }\StringTok{"intercepts"}\NormalTok{, }\StringTok{"residuals"}\NormalTok{), }
+                     \CommentTok{\# any other lavaan cfa arguments}
+                     \AttributeTok{meanstructure =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Review Model Outputs}\label{review-model-outputs}
+
+Review model outputs to ensure they do not produce heywood cases or other errors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# review the model outputs to ensure they do not produce errors}
+\NormalTok{saved\_mgcfa}\SpecialCharTok{$}\NormalTok{model\_fit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 7 x 18
+##    agfi   AIC   BIC   cfi chisq  npar  rmsea rmsea.conf.high   srmr   tli
+##   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>           <dbl>  <dbl> <dbl>
+## 1 0.991 7535. 7647. 0.931  85.3    30 0.0921           0.114 0.0595 0.896
+## 2 0.989 3671. 3761. 0.906  61.4    30 0.103            0.136 0.0749 0.859
+## 3 0.991 3846. 3938. 0.959  44.4    30 0.0741           0.108 0.0525 0.938
+## 4 0.990 7518. 7740. 0.935 106.     60 0.0894           0.113 0.0634 0.903
+## 5 0.989 7526. 7726. 0.919 126.     54 0.0943           0.116 0.0741 0.892
+## 6 0.989 7533. 7711. 0.905 145.     48 0.0970           0.117 0.0753 0.886
+## 7 0.988 7537. 7682. 0.890 167.     39 0.0972           0.116 0.0926 0.886
+## # i 8 more variables: converged <lgl>, estimator <chr>, ngroups <int>,
+## #   missing_method <chr>, nobs <int>, norig <int>, nexcluded <int>, model <chr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# overall}
+\NormalTok{saved\_mgcfa}\SpecialCharTok{$}\NormalTok{model\_overall}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## lavaan 0.6-21 ended normally after 35 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of model parameters                        30
+## 
+##   Number of observations                           301
+## 
+## Model Test User Model:
+##                                                       
+##   Test statistic                                85.306
+##   Degrees of freedom                                24
+##   P-value (Chi-square)                           0.000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# groups}
+\CommentTok{\# saved\_mgcfa$group\_models$model.1}
+\CommentTok{\# saved\_mgcfa$group\_models$model.2}
+
+\CommentTok{\# configural}
+\CommentTok{\# saved\_mgcfa$model\_configural}
+
+\CommentTok{\# constraints}
+\CommentTok{\# saved\_mgcfa$invariance\_models$model.loadings}
+\CommentTok{\# saved\_mgcfa$invariance\_models$model.intercepts}
+\CommentTok{\# saved\_mgcfa$invariance\_models$model.residuals}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Replication Model Level}\label{replication-model-level}
+
+Run the \texttt{bootstrap\_model} function and determine the effect sizes for model level invariance steps. Use the same \texttt{group.equal} constraints as above.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{saved\_boot\_model }\OtherTok{\textless{}{-}} \FunctionTok{bootstrap\_model}\NormalTok{(}
+  \CommentTok{\# saved configural model to start at}
+  \AttributeTok{saved\_configural =}\NormalTok{ saved\_mgcfa}\SpecialCharTok{$}\NormalTok{model\_configural,}
+  \CommentTok{\# dataset for the analysis}
+  \AttributeTok{data =}\NormalTok{ HolzingerSwineford1939,}
+  \CommentTok{\# model lavaan syntax}
+  \AttributeTok{model =}\NormalTok{ HS.model,}
+  \CommentTok{\# group variable in the dataset}
+  \AttributeTok{group =} \StringTok{"sex"}\NormalTok{, }
+  \CommentTok{\# number of bootstraps}
+  \CommentTok{\# this is set to a low number for testing}
+  \AttributeTok{nboot =} \DecValTok{20}\NormalTok{,}
+  \CommentTok{\# name of the fit measure you want to use, make sure it\textquotesingle{}s lavaan code}
+  \AttributeTok{invariance\_index =} \StringTok{"cfi"}\NormalTok{,}
+  \CommentTok{\# rule for the difference in fit indices}
+  \AttributeTok{invariance\_rule =}\NormalTok{ .}\DecValTok{01}\NormalTok{,}
+  \CommentTok{\# what order of steps do you want to test? }
+  \AttributeTok{group.equal =} \FunctionTok{c}\NormalTok{(}\StringTok{"loadings"}\NormalTok{, }\StringTok{"intercepts"}\NormalTok{, }\StringTok{"residuals"}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Finished Bootstrap Number: 1
+## Finished Bootstrap Number: 2
+## Finished Bootstrap Number: 3
+## Finished Bootstrap Number: 4
+## Finished Bootstrap Number: 5
+## Finished Bootstrap Number: 6
+## Finished Bootstrap Number: 7
+## Finished Bootstrap Number: 8
+## Finished Bootstrap Number: 9
+## Finished Bootstrap Number: 10
+## Finished Bootstrap Number: 11
+## Finished Bootstrap Number: 12
+## Finished Bootstrap Number: 13
+## Finished Bootstrap Number: 14
+## Finished Bootstrap Number: 15
+## Finished Bootstrap Number: 16
+## Finished Bootstrap Number: 17
+## Finished Bootstrap Number: 18
+## Finished Bootstrap Number: 19
+## Finished Bootstrap Number: 20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(saved\_boot\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tabular}{l|r|r|r|r|r|r}
+\hline
+model & non\_invariant & random\_non\_invariant & h\_nmi & h\_mi & h\_nmi\_p & h\_mi\_p\\
+\hline
+intercepts & 0.15 & 0.00 & 0.7953988 & -0.7953988 & 0.2531833 & -0.2531833\\
+\hline
+loadings & 0.75 & 0.10 & 1.4508940 & -1.4508940 & 0.4618339 & -0.4618339\\
+\hline
+residuals & 0.10 & 0.05 & 0.1924743 & -0.1924743 & 0.0612665 & -0.0612665\\
+\hline
+\end{tabular}
+
+\subsection{Replication Parameter Level / Partial Invariance}\label{replication-parameter-level-partial-invariance}
+
+If their model was invariant: use the last step as the \texttt{partial\_step} option. If their model was partially invariant, use the step that was indicated as partially invariant (where they had to relax parameters - if they did this on more than one step, use the last one).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{saved\_boot\_partial }\OtherTok{\textless{}{-}} \FunctionTok{bootstrap\_partial}\NormalTok{(}
+  \CommentTok{\# the model you want to test }
+  \CommentTok{\# use the model before your invariant one}
+  \CommentTok{\# in this case it broke down at loadings}
+  \AttributeTok{saved\_model =}\NormalTok{ saved\_mgcfa}\SpecialCharTok{$}\NormalTok{model\_configural,}
+  \CommentTok{\# the dataframe}
+  \AttributeTok{data =}\NormalTok{ HolzingerSwineford1939,}
+  \CommentTok{\# the original model syntax}
+  \AttributeTok{model =}\NormalTok{ HS.model,}
+  \CommentTok{\# the grouping variable column}
+  \AttributeTok{group =} \StringTok{"sex"}\NormalTok{,}
+  \CommentTok{\# run more but start low for testing}
+  \AttributeTok{nboot =} \DecValTok{10}\NormalTok{,}
+  \CommentTok{\# what index are you using for invariance?}
+  \CommentTok{\# match this to lavaan\textquotesingle{}s name under fitmeasures()}
+  \AttributeTok{invariance\_index =} \StringTok{"cfi"}\NormalTok{,}
+  \CommentTok{\# what rule are you using?}
+  \AttributeTok{invariance\_rule =}\NormalTok{ .}\DecValTok{01}\NormalTok{,}
+  \CommentTok{\# what are we comparing against? }
+  \AttributeTok{invariance\_compare =} \FunctionTok{unname}\NormalTok{(}\FunctionTok{fitmeasures}\NormalTok{(saved\_mgcfa}\SpecialCharTok{$}\NormalTok{model\_configural, }\StringTok{"cfi"}\NormalTok{)),}
+  \CommentTok{\# which step you want to estimate effect size for}
+  \AttributeTok{partial\_step =} \FunctionTok{c}\NormalTok{(}\StringTok{"loadings"}\NormalTok{), }
+  \CommentTok{\# which parameters you want to hold constrained}
+  \AttributeTok{group.equal =} \FunctionTok{c}\NormalTok{(}\StringTok{"loadings"}\NormalTok{)}
+\NormalTok{  )}
+
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{boot\_DF))}
+
+\FunctionTok{kable}\NormalTok{(saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{boot\_summary)}
+
+\FunctionTok{kable}\NormalTok{(saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{boot\_effects)}
+
+\NormalTok{saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{invariance\_plot}
+
+\NormalTok{saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{effect\_invariance\_plot}
+
+\NormalTok{saved\_boot\_partial}\SpecialCharTok{$}\NormalTok{density\_plot}
+\end{Highlighting}
+\end{Shaded}
 
 
 \end{document}

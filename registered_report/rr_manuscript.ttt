@@ -1,0 +1,64 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table-1-example}Example output of `visualizemi` for model effect sizes}
+
+\begin{tabular}{lllllll}
+\toprule
+model & \multicolumn{1}{c}{non\_invariant} & \multicolumn{1}{c}{random\_non\_invariant} & \multicolumn{1}{c}{h\_nmi} & \multicolumn{1}{c}{h\_mi} & \multicolumn{1}{c}{h\_nmi\_p} & \multicolumn{1}{c}{h\_mi\_p}\\
+\midrule
+intercepts & 0.15 & 0.01 & 0.59 & -0.59 & 0.19 & -0.19\\
+loadings & 0.80 & 0.06 & 1.74 & -1.74 & 0.55 & -0.55\\
+residuals & 0.04 & 0.06 & -0.11 & 0.11 & -0.03 & 0.03\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} }
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\efloatseparator
+ 
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table-2-example}Example output of `visualizemi` for parameter effect sizes}
+
+\begin{tabular}{lllllll}
+\toprule
+term & \multicolumn{1}{c}{non\_invariant} & \multicolumn{1}{c}{random\_non\_invariant} & \multicolumn{1}{c}{h\_nmi} & \multicolumn{1}{c}{h\_mi} & \multicolumn{1}{c}{h\_nmi\_p} & \multicolumn{1}{c}{h\_mi\_p}\\
+\midrule
+speed =\textasciitilde{} x7 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+speed =\textasciitilde{} x8 & 0.86 & 0.72 & 0.35 & -0.35 & 0.11 & -0.11\\
+speed =\textasciitilde{} x9 & 0.88 & 0.76 & 0.31 & -0.31 & 0.10 & -0.10\\
+textual =\textasciitilde{} x4 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+textual =\textasciitilde{} x5 & 0.96 & 0.80 & 0.51 & -0.51 & 0.16 & -0.16\\
+textual =\textasciitilde{} x6 & 0.96 & 0.80 & 0.51 & -0.51 & 0.16 & -0.16\\
+visual =\textasciitilde{} x1 & 0.96 & 0.80 & 0.50 & -0.50 & 0.16 & -0.16\\
+visual =\textasciitilde{} x2 & 0.92 & 0.77 & 0.43 & -0.43 & 0.14 & -0.14\\
+visual =\textasciitilde{} x3 & 0.92 & 0.78 & 0.41 & -0.41 & 0.13 & -0.13\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} }
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}

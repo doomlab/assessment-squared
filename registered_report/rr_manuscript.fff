@@ -1,7 +1,7 @@
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 
-\includegraphics[width=1.69in]{../pics/data_curation} \caption{A flow chart of potential exclusions to create the database of measurement invariance.}\label{fig:figure-process}
+\includegraphics[width=1.69in]{../pics/data_curation} \caption{A flow chart of potential exclusions to create the database of measurement invariance (MI).}\label{fig:figure-process}
 \end{figure*}
 \efloatseparator
  
