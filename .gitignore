@@ -49,3 +49,5 @@ po/*~
 rsconnect/
 .DS_Store
 *.pdf
+.DS_Store
+/no_sync
